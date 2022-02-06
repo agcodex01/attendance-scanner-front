@@ -16,7 +16,7 @@
 
       <v-tab href="#attendances">
         Attendances
-        <v-icon>mdi-heart</v-icon>
+        <v-icon>mdi-note</v-icon>
       </v-tab>
 
       <v-tab href="#activity_logs">
@@ -42,7 +42,7 @@
             Employees
             <v-spacer></v-spacer>
             <v-text-field
-              v-model="search"
+              v-model="searchEmployee"
               append-icon="mdi-magnify"
               label="Search"
               single-line
@@ -53,7 +53,7 @@
             :headers="userHeaders"
             :items="users"
             :items-per-page="5"
-            :search="search"
+            :search="searchEmployee"
             class="elevation-1"
           >
             <template v-slot:item.name="{ item }">
@@ -75,7 +75,7 @@
             Attendances
             <v-spacer></v-spacer>
             <v-text-field
-              v-model="search"
+              v-model="searchAttendance"
               append-icon="mdi-magnify"
               label="Search"
               single-line
@@ -86,7 +86,7 @@
             :headers="attendanceHeader"
             :items="attendances"
             :items-per-page="5"
-            :search="search"
+            :search="searchAttendance"
             class="elevation-1"
           ></v-data-table>
         </v-card>
@@ -97,19 +97,20 @@
             Activity Logs
             <v-spacer></v-spacer>
             <v-text-field
-              v-model="search"
+              v-model="searchLog"
               append-icon="mdi-magnify"
               label="Search"
               single-line
               hide-details
             ></v-text-field>
           </v-card-title>
-          <!-- <v-data-table
-            :items="desserts"
+          <v-data-table
+          :headers="logHeader"
+            :items="logs"
             :items-per-page="5"
-            :search="search"
+            :search="searchLog"
             class="elevation-1"
-          ></v-data-table> -->
+          ></v-data-table>
         </v-card>
       </v-tab-item>
     </v-tabs-items>
@@ -121,7 +122,9 @@ export default {
   name: "Admin",
   data: () => ({
     text: "lorem dfsdfsd",
-    search: "",
+    searchEmployee: "",
+    searchAttendance: "",
+    searchLog: "",
     tab: null,
     userHeaders: [
       {
@@ -167,22 +170,39 @@ export default {
         value: "location",
       },
     ],
+    logHeader: [
+      {
+        text: "User",
+        value: "user.name",
+      },
+      {
+        text: "Signin",
+        value: "created_at",
+      },
+      {
+        text: "Location",
+        value: "location",
+      },
+    ],
   }),
   computed: {
     ...mapGetters({
       users: "user/GET_USERS",
       attendances: "attendance/GET_ALL",
+      logs: 'log/GET_LOGS'
     }),
   },
   methods: {
     ...mapActions({
       fetchUsers: "user/GET_USERS",
       fetchAttendances: "attendance/GET_ALL",
+      fetchLogs: 'log/GET_LOGS'
     }),
   },
   async mounted() {
     this.fetchUsers();
     this.fetchAttendances();
+    this.fetchLogs()
   },
 };
 </script>
