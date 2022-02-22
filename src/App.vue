@@ -68,5 +68,11 @@ export default {
       this.time = new Date().toLocaleTimeString();
     }, 1000);
   },
+  created() {
+    window.Echo.private('signin')
+      .listen('App.Events.NewSignIn', (e) => {
+          console.log('test successful ' + e)
+  })
+  }
 };
 </script>

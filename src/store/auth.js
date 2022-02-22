@@ -25,7 +25,7 @@ export default {
             commit("SET_TOKEN", data.token);
             commit("SET_USER", data.user);
           })
-          .catch((error) => reject(error.response.errors));
+          .catch((error) => reject(error.response.data.errors));
       });
     },
     LOG_OUT({commit}) {

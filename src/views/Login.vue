@@ -32,6 +32,8 @@
               :rules="emailRules"
               label="E-mail"
               required
+              :error="authErrors.email.hasError"
+              :error-messages="authErrors.email.errorMsg"
             ></v-text-field>
             <v-text-field
               v-model="password"
@@ -43,19 +45,24 @@
               label="Password"
               outlined
               required
+              :error="authErrors.password.hasError"
+              :error-messages="authErrors.password.errorMsg"
             ></v-text-field>
 
             <v-btn
               x-large
               type="submit"
               block
-              :disabled="!valid"
+              :loading="loading"
+              :disabled="loading"
               color="purple darken-4"
               class="mr-4 text"
               @click="validate"
             >
               <span class="white--text">Login</span>
-              <v-icon light>mdi-cached</v-icon>
+              <template v-slot:loader>
+                <span>Loading...</span>
+              </template>
             </v-btn>
           </v-form>
         </v-card>
@@ -66,7 +73,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions } from "vuex";
 export default {
   data: () => ({
     title: "Login",
@@ -77,7 +84,7 @@ export default {
     items: [
       { display: "Gate Entrance", value: "gate_entrance" },
       { display: "Department", value: "department" },
-      { display: "Admin Dashboard", value: "admin" }
+      { display: "Admin Dashboard", value: "admin" },
     ],
     email: "",
     emailRules: [
@@ -89,11 +96,22 @@ export default {
       (v) => !!v || "Password is required",
       (v) => (v && v.length >= 8) || "Password must be less than 8 characters",
     ],
+    loading: false,
+    authErrors: {
+      email: {
+        hasError: false,
+        errorMsg: null
+      },
+      password: {
+        hasError: false,
+        errorMsg: null
+      }
+    }
   }),
 
   methods: {
     ...mapActions({
-      login: 'auth/LOGIN'
+      login: "auth/LOGIN",
     }),
     //..validate inputs
     validate() {
@@ -102,19 +120,35 @@ export default {
     //Login method here
     async onLogin() {
       //api call here
+      this.loading = true
       this.login({
         email: this.email,
         password: this.password,
-        location: this.select
+        location: this.select,
+      }).then(() => {
+        this.$router.push({
+          name: this.select,
+        });
       })
-      console.log('CALL API');
-      this.$router.push({
-        name: this.select
+      .catch(errors => {
+        console.log(errors);
+        for(const key in errors) {
+          if(Object.keys(this.authErrors).includes(key)) {
+            this.authErrors[key].hasError = true;
+            this.authErrors[key].errorMsg = errors[key][0]
+            console.log('eror', errors[key][0]);
+          }
+        }
+        console.log(this.authErrors);
+        // this.authErrors
       })
+      .finally(() => {
+        this.loading = false
+      });
+      console.log("CALL API");
     },
     showSelected() {
       console.log(this.select);
-
     },
   },
 };
