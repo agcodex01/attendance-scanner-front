@@ -12,6 +12,7 @@ export default {
   },
   actions: {
     async GET_USERS({ commit }) {
+      commit("SET_USERS", []);
       return new Promise((resolve, reject) => {
         UserService.getUsers({})
           .then(({ data }) => {
@@ -25,8 +26,8 @@ export default {
       return new Promise((resolve, reject) => {
         UserService.create(userInfo)
           .then(({ data }) => {
-            commit("ADD_USER", data.user);
-            resolve(data.user);
+            commit("ADD_USER", data);
+            resolve(data);
           })
           .catch((error) => reject(error.response.errors));
       });
@@ -35,8 +36,8 @@ export default {
       return new Promise((resolve, reject) => {
         UserService.update(userInfo, id)
           .then(({ data }) => {
-            commit("UPDATE_USER", data.user);
-            resolve(data.user);
+            commit("UPDATE_USER", data);
+            resolve(data);
           })
           .catch((error) => reject(error.response.errors));
       });

@@ -23,6 +23,10 @@
         Activity logs
         <v-icon>mdi-account-box</v-icon>
       </v-tab>
+      <v-tab href="#settings" @click="fetchLogsFn">
+        Settings
+        <v-icon>mdi-wrench</v-icon>
+      </v-tab>
     </v-tabs>
 
     <v-tabs-items v-model="tab">
@@ -39,7 +43,7 @@
             >
           </v-card-title>
           <v-card-title>
-            Employees
+            Users
             <v-spacer></v-spacer>
             <v-text-field
               v-model="searchEmployee"
@@ -58,7 +62,7 @@
             loading-text="Fetching users"
             class="elevation-1"
           >
-            <template v-slot:item[`name`]="{ item }">
+            <template v-slot:item.name="{ item }">
               <v-btn
                 class="text-underlined"
                 :to="{ name: 'update_employee', params: { id: item.id } }"
@@ -119,11 +123,35 @@
           ></v-data-table>
         </v-card>
       </v-tab-item>
+      <v-tab-item value="settings" class="pa-5">
+        <h1>Settings</h1>
+        <v-list>
+          <v-list-item>
+            <v-list-item-content>
+              <v-list-item-title> Current Department</v-list-item-title>
+            </v-list-item-content>
+            <v-list-item-content>
+              <v-select
+                v-model="location"
+                :items="constants.departments"
+                item-text="display"
+                item-value="value"
+                label="Select"
+                outlined
+                single-line
+                @change="setDepartment"
+                dense
+              ></v-select>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </v-tab-item>
     </v-tabs-items>
   </v-card>
 </template>
 <script>
 import { mapActions, mapGetters } from "vuex";
+import UserConstant from "../constants/user";
 export default {
   name: "Admin",
   data: () => ({
@@ -132,6 +160,7 @@ export default {
     searchAttendance: "",
     searchLog: "",
     tab: null,
+    constants: UserConstant,
     userHeaders: [
       {
         text: "Name",
@@ -191,12 +220,14 @@ export default {
       },
     ],
     loading: false,
+    location: null,
   }),
   computed: {
     ...mapGetters({
       users: "user/GET_USERS",
       attendances: "attendance/GET_ALL",
       logs: "log/GET_LOGS",
+      currentDepartment: "attendance/GET_CURRENT_DEPARTMENT",
     }),
   },
   methods: {
@@ -204,6 +235,7 @@ export default {
       fetchUsers: "user/GET_USERS",
       fetchAttendances: "attendance/GET_ALL",
       fetchLogs: "log/GET_LOGS",
+      setDepartment: "attendance/SET_DEPARTMENT",
     }),
     async fetchUsersFn() {
       this.loading = true;
@@ -223,6 +255,7 @@ export default {
   },
   async mounted() {
     this.loading = true;
+    this.location = this.currentDepartment;
     await this.fetchUsers();
     this.loading = false;
   },

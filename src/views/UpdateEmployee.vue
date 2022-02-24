@@ -102,8 +102,12 @@
                 class="mr-4 text"
                 @click="validate"
                 outlined
+                :loading="loading"
               >
                 <span>Update</span>
+                <template v-slot:loader>
+                  <span>Loading...</span>
+                </template>
               </v-btn>
             </div>
           </v-col>
@@ -160,6 +164,7 @@ export default {
       status: "active",
     },
     select: null,
+    loading: false
   }),
   methods: {
     ...mapActions({
@@ -172,6 +177,7 @@ export default {
     //Login method here
     async onLogin() {
       //api call here
+      this.loading = true
       this.updateUser({ userInfo: this.user, id: this.$route.params.id }).then(
         (user) => {
           this.text = `User ${user.name} successfully created.`;
@@ -180,7 +186,9 @@ export default {
             name: "admin",
           });
         }
-      );
+      ).finally(() => {
+        this.loading = false
+      });
 
       console.log("CALL API", this.user);
     },

@@ -5,12 +5,11 @@ window.Pusher = require('pusher-js')
 const token = localStorage.getItem('token')
 window.Echo = new Echo({
   broadcaster: 'pusher',
-  key: 'websocketkey',
-  wsHost: 'localhost',
-  authEndpoint: 'http://localhost:8000/broadcasting/auth',
-//   encrypted: true,
+  key: 'app_key',
+  wsHost: '172.16.32.5',
+  authEndpoint: 'http://172.16.32.5:8000/broadcasting/auth',
+  encrypted: true,
   forceTLS: false,
-//   cluster: 'mt1',
   wsPort: 6001,
   wssPort: 6001,
   disableStats: true,

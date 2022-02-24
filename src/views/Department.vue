@@ -1,5 +1,8 @@
 <template>
   <v-container fluid>
+    <v-snackbar  :color="type" v-model="showNotif" :timeout="2000">
+      {{ text }}
+    </v-snackbar>
     <v-row justify="space-between">
       <v-col cols="3">
         <div v-if="loading">
@@ -23,6 +26,17 @@
               indeterminate
             ></v-progress-circular>
           </h4>
+          <v-select
+            v-model="location"
+            :items="constants.departments"
+            item-text="display"
+            item-value="value"
+            label="Select"
+            outlined
+            single-line
+            @change="setDepartment"
+            v-if="!currentDepartment"
+          ></v-select>
         </div>
       </v-col>
 
@@ -81,6 +95,9 @@ export default {
     constants: UserConstant,
     loading: false,
     processing: false,
+    showNotif: false,
+    type: 'green',
+    text: null
   }),
   computed: {
     ...mapGetters({
@@ -96,24 +113,35 @@ export default {
     }),
     codeArrived(userId) {
       const currentTime = new Date().getTime();
-      this.userId = userId;
-      this.processing = true;
-      if (!this.afterScan || currentTime - this.afterScan > 2000) {
+      if (
+        !this.afterScan ||
+        (currentTime - this.afterScan > 5000 && !this.processing && userId)
+      ) {
+        this.processing = true;
         this.updateLocation({
-          id: this.userId,
+          id: userId,
           location: {
             location: this.currentDepartment,
           },
-        }).finally(() => {
+        }).then((attendance) => {
+          this.showNotif = true
+          this.text = `${attendance.user.name} sign In successfully.`
+        })
+        .finally(() => {
           console.log("SCANNED: ", userId);
-          this.afterScan = currentTime;
           this.processing = false;
+          this.userId = userId;
         });
+
+        this.afterScan = currentTime;
       }
     },
   },
   async mounted() {
     this.loading = true;
+    window.Echo.channel("signin").listen("NewSignIN", (e) => {
+      console.log("test successful " + e);
+    });
     await this.fetchAttendance({});
     this.loading = false;
   },

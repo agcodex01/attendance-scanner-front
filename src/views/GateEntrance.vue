@@ -95,25 +95,27 @@ export default {
     }),
     codeArrived(userId) {
       const currentTime = new Date().getTime();
-      if (!this.afterScan || currentTime - this.afterScan > 2000) {
+      if (!this.afterScan || (currentTime - this.afterScan ) > 5000 && !this.processing) {
         this.processing = true;
         this.sign(userId)
           .catch((error) => {
             this.text = error.errors;
             this.showErorr = true;
-            console.log(error);
           })
           .finally(() => {
-            console.log("SCANNED: ", userId);
+            console.log("SCANNED ID: ", userId);
             this.processing = false;
-            this.afterScan = currentTime;
             this.userId = userId;
           });
+        this.afterScan = currentTime
       }
     },
   },
   async mounted() {
     this.loading = true;
+    window.Echo.channel("signin").listen(".NewSignIn", (e) => {
+      console.log("test successful " + e);
+    });
     await this.fetchAttendance({});
     this.loading = false;
   },

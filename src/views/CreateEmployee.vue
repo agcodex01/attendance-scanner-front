@@ -4,7 +4,7 @@
       <h2 class="text-uppercase">{{ title }}</h2>
 
       <v-form
-        @submit.prevent="onLogin"
+        @submit.prevent="onCreateUser"
         ref="form"
         v-model="valid"
         lazy-validation
@@ -47,17 +47,6 @@
               error-count="2"
               :rules="emailRules"
               label="E-mail"
-              required
-            ></v-text-field>
-            <v-text-field
-              v-model="user.password"
-              color="purple"
-              :rules="passwordRules"
-              :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-              @click:append="show1 = !show1"
-              :type="show1 ? 'text' : 'password'"
-              label="Password"
-              outlined
               required
             ></v-text-field>
             <v-select
@@ -106,8 +95,12 @@
                 class="mr-4 text"
                 @click="validate"
                 outlined
+                :loading="loading"
               >
                 <span>Register</span>
+                <template v-slot:loader>
+                  <span>Loading...</span>
+                </template>
               </v-btn>
             </div>
           </v-col>
@@ -155,7 +148,6 @@ export default {
     user: {
       name: null,
       email: null,
-      password: null,
       department: null,
       avatar: require("@/assets/default.jpg"),
       type: null,
@@ -163,6 +155,7 @@ export default {
       status: "active",
     },
     select: null,
+    loading: false,
   }),
   methods: {
     ...mapActions({
@@ -172,15 +165,21 @@ export default {
       this.$refs.form.validate();
     },
     //Login method here
-    async onLogin() {
+    async onCreateUser() {
       //api call here
-      this.createUser(this.user).then((user) => {
-        this.text = `User ${user.name} successfully created.`;
-        this.snackbar = true;
-        this.$router.push({
-          name: "admin",
+      this.loading = true;
+      this.createUser(this.user)
+        .then((user) => {
+          console.log('asdasd', user);
+          this.text = `User ${user.name} successfully created.`;
+          this.snackbar = true;
+          this.$router.push({
+            name: "admin",
+          });
+        })
+        .finally(() => {
+          this.loading = false;
         });
-      });
 
       console.log("CALL API", this.user);
     },

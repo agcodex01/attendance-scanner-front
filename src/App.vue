@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions } from "vuex";
 export default {
   name: "App",
   data: () => ({
@@ -53,26 +53,23 @@ export default {
   }),
   methods: {
     ...mapActions({
-      logout: 'auth/LOG_OUT'
+      logout: "auth/LOG_OUT",
     }),
-    onLogout () {
+    onLogout() {
       this.logout().then(() => {
         this.$router.push({
-          name: 'login'
-        })
-      })
-    }
+          name: "login",
+        });
+      });
+    },
   },
   mounted() {
     setInterval(() => {
       this.time = new Date().toLocaleTimeString();
     }, 1000);
+    window.Echo.channel("signin").listen(".NewSignIn", (e) => {
+      console.log("test successful " + e);
+    });
   },
-  created() {
-    window.Echo.private('signin')
-      .listen('App.Events.NewSignIn', (e) => {
-          console.log('test successful ' + e)
-  })
-  }
 };
 </script>
