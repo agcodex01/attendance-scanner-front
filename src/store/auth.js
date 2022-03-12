@@ -3,6 +3,7 @@ import AuthService from "../services/auth";
 export default {
   namespaced: true,
   state: () => ({
+    showIconBar: false,
     token: localStorage.getItem('token'),
     user: localStorage.getItem('user'),
   }),
@@ -13,6 +14,7 @@ export default {
     GET_TOKEN: (state) => {
       return state.token;
     },
+    GET_SHOW_ICON: state => state.showIconBar
   },
   actions: {
     async LOGIN({ commit }, credential) {
@@ -36,6 +38,9 @@ export default {
         }).catch(error => reject(error.response.data))
        
       })
+    },
+    SET_SHOW_ICON ({ commit }, value) {
+      commit('SET_SHOW_ICON', value)
     }
   },
   mutations: {
@@ -50,6 +55,9 @@ export default {
       state.token = null
       localStorage.removeItem('token')
       localStorage.removeItem('user')
+    },
+    SET_SHOW_ICON: (state, value) => {
+      state.showIconBar = value
     }
   },
 };

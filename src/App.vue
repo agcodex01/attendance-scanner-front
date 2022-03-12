@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-app-bar app color="#900303" dark absolute>
-      <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon v-if="showIconBar" @click="drawer = true"></v-app-bar-nav-icon>
       <div class="d-flex align-center">
         <v-img
           alt="Vuetify Logo"
@@ -21,7 +21,7 @@
         <span class="mr-2">Time: {{ time }}</span>
       </v-btn>
     </v-app-bar>
-    <v-navigation-drawer v-model="drawer" absolute temporary clipped bottom app>
+    <v-navigation-drawer v-model="drawer" absolute temporary clipped app>
       <v-list nav dense>
         <v-list-item-group
           v-model="group"
@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 export default {
   name: "App",
   data: () => ({
@@ -54,6 +54,7 @@ export default {
   methods: {
     ...mapActions({
       logout: "auth/LOG_OUT",
+      fetchAttendance: "attendance/GET_ATTENDANCES",
     }),
     onLogout() {
       this.logout().then(() => {
@@ -63,12 +64,17 @@ export default {
       });
     },
   },
+  computed: {
+    ...mapGetters({
+      showIconBar: "auth/GET_SHOW_ICON"
+    })
+  },
   mounted() {
     setInterval(() => {
       this.time = new Date().toLocaleTimeString();
     }, 1000);
-    window.Echo.channel("signin").listen(".NewSignIn", (e) => {
-      console.log("test successful " + e);
+    window.Echo.channel("signin").listen("NewSignIn", async () => {
+      this.$store.dispatch("attendance/GET_ATTENDANCES");
     });
   },
 };

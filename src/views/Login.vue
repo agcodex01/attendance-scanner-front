@@ -151,5 +151,12 @@ export default {
       console.log(this.select);
     },
   },
+  mounted() {
+    let routeName = this.$route.name
+    this.$store.dispatch(
+      'auth/SET_SHOW_ICON', 
+       !(routeName == 'home' || routeName == 'login')
+      )
+  }
 };
 </script>

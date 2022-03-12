@@ -4,9 +4,8 @@
       <h2 class="text-uppercase">{{ title }}</h2>
 
       <v-form
-        @submit.prevent="onLogin"
+        @submit.prevent="onUpdateUser"
         ref="form"
-        v-model="valid"
         lazy-validation
         class="mt-10 mb-6 pr-8 pl-8 pb-8 pt-4"
       >
@@ -27,6 +26,8 @@
               outlined
               dense
               @change="displayAvatar"
+              :error="errors.avatar.hasError"
+              :error-messages="errors.avatar.message"
             ></v-file-input>
             <h3>User QrCode</h3>
             <v-img
@@ -45,6 +46,8 @@
               error-count="2"
               label="Name"
               required
+              :error="errors.name.hasError"
+              :error-messages="errors.name.message"
             ></v-text-field>
             <v-text-field
               v-model="user.email"
@@ -55,6 +58,8 @@
               :rules="emailRules"
               label="E-mail"
               required
+              :error="errors.email.hasError"
+              :error-messages="errors.email.message"
             ></v-text-field>
             <v-select
               v-model="user.position"
@@ -64,17 +69,6 @@
               label="Position"
               outlined
               single-line
-              @change="showSelected"
-            ></v-select>
-            <v-select
-              v-model="user.type"
-              :items="constants.types"
-              item-text="display"
-              item-value="value"
-              label="Type"
-              outlined
-              single-line
-              @change="showSelected"
             ></v-select>
             <v-select
               v-model="user.department"
@@ -84,7 +78,8 @@
               label="Department"
               outlined
               single-line
-              @change="showSelected"
+              :error="errors.department.hasError"
+              :error-messages="errors.department.message"
             ></v-select>
             <div>
               <v-btn
@@ -97,7 +92,6 @@
               ><v-btn
                 x-large
                 type="submit"
-                :disabled="!valid"
                 color="primary"
                 class="mr-4 text"
                 @click="validate"
@@ -128,26 +122,15 @@
 <script>
 import { mapActions } from "vuex";
 import UserConstant from "../constants/user";
+import UserError from "../constants/UserError";
 export default {
   name: "UpdateEmployee",
   data: () => ({
-    valid: true,
     snackbar: false,
     text: "",
-    show1: false,
-    show2: false,
     constants: UserConstant,
     previewImage: require("@/assets/default.jpg"),
-    items: [
-      { display: "Gate Entrance", value: "gate_entrance" },
-      { display: "Department", value: "department" },
-      { display: "Admin Dashboard", value: "admin" },
-    ],
     title: "Update user",
-    passwordRules: [
-      (v) => !!v || "Password is required",
-      (v) => (v && v.length >= 8) || "Password must be less than 8 characters",
-    ],
     emailRules: [
       (v) => !!v || "E-mail is required",
       (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
@@ -159,12 +142,13 @@ export default {
       password: null,
       department: null,
       avatar: require("@/assets/default.jpg"),
-      type: null,
+      type: "employee",
       position: null,
       status: "active",
     },
     select: null,
-    loading: false
+    loading: false,
+    errors: UserError,
   }),
   methods: {
     ...mapActions({
@@ -174,26 +158,34 @@ export default {
     validate() {
       this.$refs.form.validate();
     },
-    //Login method here
-    async onLogin() {
-      //api call here
-      this.loading = true
-      this.updateUser({ userInfo: this.user, id: this.$route.params.id }).then(
-        (user) => {
+    resetErrors() {
+      Object.keys(this.errors).forEach((key) => {
+        this.errors[key].message = null;
+        this.errors[key].hasError = false;
+      });
+    },
+    async onUpdateUser() {
+      this.loading = true;
+      this.resetErrors();
+      this.updateUser({ userInfo: this.user, id: this.$route.params.id })
+        .then((user) => {
           this.text = `User ${user.name} successfully created.`;
           this.snackbar = true;
           this.$router.push({
             name: "admin",
           });
-        }
-      ).finally(() => {
-        this.loading = false
-      });
-
-      console.log("CALL API", this.user);
-    },
-    showSelected() {
-      console.log(this.select);
+        })
+        .catch((error) => {
+          Object.keys(this.errors).forEach((key) => {
+            if (key in error) {
+              this.errors[key].message = error[key];
+              this.errors[key].hasError = true;
+            }
+          });
+        })
+        .finally(() => {
+          this.loading = false;
+        });
     },
     displayAvatar(file) {
       if (file) {
@@ -209,10 +201,14 @@ export default {
     },
   },
   async mounted() {
+    this.$store.dispatch(
+      "auth/SET_SHOW_ICON",
+      true
+    );
+    this.resetErrors();
     await this.fetchById(this.$route.params.id).then((user) => {
       this.previewImage = user.avatar;
       this.user = user;
-      console.log("UYY", this.user);
     });
   },
 };

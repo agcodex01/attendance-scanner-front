@@ -254,6 +254,10 @@ export default {
     },
   },
   async mounted() {
+    this.$store.dispatch(
+      "auth/SET_SHOW_ICON",
+      true
+    );
     this.loading = true;
     this.location = this.currentDepartment;
     await this.fetchUsers();

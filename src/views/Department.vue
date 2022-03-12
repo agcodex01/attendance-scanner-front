@@ -13,6 +13,7 @@
           ></v-skeleton-loader>
         </div>
         <div v-else>
+          {{ currentDepartment || '' }}
           <vue-qr-reader
             v-on:code-scanned="codeArrived"
             :stop-on-scanned="false"
@@ -26,17 +27,6 @@
               indeterminate
             ></v-progress-circular>
           </h4>
-          <v-select
-            v-model="location"
-            :items="constants.departments"
-            item-text="display"
-            item-value="value"
-            label="Select"
-            outlined
-            single-line
-            @change="setDepartment"
-            v-if="!currentDepartment"
-          ></v-select>
         </div>
       </v-col>
 
@@ -138,6 +128,10 @@ export default {
     },
   },
   async mounted() {
+    this.$store.dispatch(
+      "auth/SET_SHOW_ICON",
+      true
+    );
     this.loading = true;
     window.Echo.channel("signin").listen("NewSignIN", (e) => {
       console.log("test successful " + e);

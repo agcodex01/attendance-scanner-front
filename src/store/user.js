@@ -29,7 +29,7 @@ export default {
             commit("ADD_USER", data);
             resolve(data);
           })
-          .catch((error) => reject(error.response.errors));
+          .catch((error) => reject(error.response.data.errors));
       });
     },
     async UPDATE_USER({ commit }, { userInfo, id }) {
@@ -39,7 +39,7 @@ export default {
             commit("UPDATE_USER", data);
             resolve(data);
           })
-          .catch((error) => reject(error.response.errors));
+          .catch((error) => reject(error.response.data.errors));
       });
     },
     async FIND_USER_BY_ID ({ commit }, id) {

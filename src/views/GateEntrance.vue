@@ -1,9 +1,9 @@
 <template>
   <v-container fluid class="mt-5">
-    <v-snackbar color="red ligth" v-model="showErorr" :timeout="2000">
+    <v-snackbar :color="type" v-model="showNotif" :timeout="2000">
       {{ text }}
     </v-snackbar>
-    <v-row justify="space-between">
+    <v-row>
       <v-col cols="3">
         <div v-if="loading">
           <v-skeleton-loader
@@ -30,7 +30,7 @@
       </v-col>
 
       <v-col cols="9">
-        <div v-if="loading">
+        <div v-if="isFetching">
           <v-row>
             <v-skeleton-loader
               type="list-item-avatar, divider, list-item-three-line, card-heading"
@@ -44,10 +44,10 @@
           <v-carousel
             v-model="displayIndex"
             cycle
-            wi
             hide-delimiter-background
             show-arrows-on-hover
             v-if="attendances.length > 0"
+            height="100%"
           >
             <v-carousel-item
               v-for="(attendanceChunck, i) in attendances"
@@ -82,10 +82,13 @@ export default {
     text: null,
     processing: false,
     loading: false,
+    showNotif: false,
+    type: "green",
   }),
   computed: {
     ...mapGetters({
       attendances: "attendance/GET_ATTENDANCES",
+      isFetching: "attendance/GET_ATTENDANCES_FETCHING",
     }),
   },
   methods: {
@@ -95,27 +98,41 @@ export default {
     }),
     codeArrived(userId) {
       const currentTime = new Date().getTime();
-      if (!this.afterScan || (currentTime - this.afterScan ) > 5000 && !this.processing) {
+      if (
+        !this.afterScan ||
+        (currentTime - this.afterScan > 5000 && !this.processing)
+      ) {
         this.processing = true;
         this.sign(userId)
+          .then(({ data }) => {
+            if (data.signout) {
+              this.text = `${data.user.name} school signout successfully.`;
+            } else {
+              this.text = `${data.user.name} school signin successfully.`;
+            }
+            this.type = "green";
+            this.showNotif = true;
+          })
           .catch((error) => {
             this.text = error.errors;
-            this.showErorr = true;
+            this.type = "red";
+            this.showNotif = true;
           })
           .finally(() => {
             console.log("SCANNED ID: ", userId);
             this.processing = false;
             this.userId = userId;
           });
-        this.afterScan = currentTime
+        this.afterScan = currentTime;
       }
     },
   },
   async mounted() {
+    this.$store.dispatch(
+      "auth/SET_SHOW_ICON",
+      true
+    );
     this.loading = true;
-    window.Echo.channel("signin").listen(".NewSignIn", (e) => {
-      console.log("test successful " + e);
-    });
     await this.fetchAttendance({});
     this.loading = false;
   },

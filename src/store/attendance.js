@@ -7,51 +7,54 @@ export default {
     signin: null,
     all: [],
     currentDepartment: localStorage.getItem("currentDepartment"),
+    attendanceFetching: false
   }),
   getters: {
     GET_ATTENDANCES: (state) => state.attendances,
     GET_ALL: (state) => state.all,
     GET_CURRENT_DEPARTMENT: (state) => state.currentDepartment,
+    GET_ATTENDANCES_FETCHING: state => state.attendanceFetching
   },
   actions: {
     GET_ATTENDANCES({ commit }, filter) {
       return new Promise((resolve, reject) => {
+        commit('SET_FETCHING', true)
         AttendanceService.getAttendances(filter)
           .then(({ data }) => {
             commit("SET_ATTENDANCES", data);
             resolve(data);
           })
-          .catch((error) => reject(error.response.errors));
+          .catch((error) => reject(error.response.errors))
+          .finally(() => commit('SET_FETCHING', false));
       });
     },
     GET_ALL({ commit }, filter) {
       return new Promise((resolve, reject) => {
+        commit('SET_FETCHING', true)
         AttendanceService.all(filter)
           .then(({ data }) => {
             console.log("ALL", data);
             commit("SET_ALL", data);
             resolve(data);
           })
-          .catch((error) => reject(error.response.errors));
+          .catch((error) => reject(error.response.errors))
+          .finally(() => commit('SET_FETCHING', false));
       });
     },
-    SIGN({ commit, dispatch }, userId) {
+    SIGN({ commit }, userId) {
       return new Promise((resolve, reject) => {
         AttendanceService.sign(userId)
           .then((data) => {
-            dispatch('GET_ATTENDANCES')
             commit("SET_SIGN_IN", data);
             resolve(data);
           })
           .catch((error) => reject(error.response.data));
       });
     },
-    UPDATE_LOCATION({ dispatch }, { id, location }) {
+    UPDATE_LOCATION(context, { id, location }) {
       return new Promise((resolve, reject) => {
         AttendanceService.updateLocation(id, location)
          .then(({ data }) => {
-           console.log(data);
-            dispatch('GET_ATTENDANCES')
             resolve(data);
           })
           .catch((error) => reject(error.response.errors));
@@ -79,5 +82,8 @@ export default {
       state.currentDepartment = department;
       localStorage.setItem("currentDepartment", department);
     },
+    SET_FETCHING: (state, status) => {
+      state.attendanceFetching = status
+    }
   },
 };

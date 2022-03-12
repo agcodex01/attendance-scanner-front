@@ -27,6 +27,8 @@
               outlined
               dense
               @change="displayAvatar"
+              :error="errors.avatar.hasError"
+              :error-messages="errors.avatar.message"
             ></v-file-input>
           </v-col>
           <v-col>
@@ -38,6 +40,8 @@
               error-count="2"
               label="Name"
               required
+              :error="errors.name.hasError"
+              :error-messages="errors.name.message"
             ></v-text-field>
             <v-text-field
               v-model="user.email"
@@ -57,17 +61,8 @@
               label="Position"
               outlined
               single-line
-              @change="showSelected"
-            ></v-select>
-            <v-select
-              v-model="user.type"
-              :items="constants.types"
-              item-text="display"
-              item-value="value"
-              label="Type"
-              outlined
-              single-line
-              @change="showSelected"
+              :error="errors.position.hasError"
+              :error-messages="errors.position.message"
             ></v-select>
             <v-select
               v-model="user.department"
@@ -77,7 +72,8 @@
               label="Department"
               outlined
               single-line
-              @change="showSelected"
+              :error="errors.department.hasError"
+              :error-messages="errors.department.message"
             ></v-select>
             <div>
               <v-btn
@@ -90,7 +86,6 @@
               ><v-btn
                 x-large
                 type="submit"
-                :disabled="!valid"
                 color="primary"
                 class="mr-4 text"
                 @click="validate"
@@ -121,6 +116,7 @@
 <script>
 import { mapActions } from "vuex";
 import UserConstant from "../constants/user";
+import UserError from "../constants/UserError";
 export default {
   name: "CreateEmployee",
   data: () => ({
@@ -131,11 +127,6 @@ export default {
     show2: false,
     constants: UserConstant,
     previewImage: require("@/assets/default.jpg"),
-    items: [
-      { display: "Gate Entrance", value: "gate_entrance" },
-      { display: "Department", value: "department" },
-      { display: "Admin Dashboard", value: "admin" },
-    ],
     title: "Create user",
     passwordRules: [
       (v) => !!v || "Password is required",
@@ -150,31 +141,44 @@ export default {
       email: null,
       department: null,
       avatar: require("@/assets/default.jpg"),
-      type: null,
+      type: "employee",
       position: null,
       status: "active",
     },
     select: null,
     loading: false,
+    errors: UserError,
   }),
   methods: {
     ...mapActions({
       createUser: "user/CREATE_USER",
     }),
+    resetErrors() {
+      Object.keys(this.errors).forEach((key) => {
+        this.errors[key].message = null;
+        this.errors[key].hasError = false;
+      });
+    },
     validate() {
       this.$refs.form.validate();
     },
-    //Login method here
     async onCreateUser() {
-      //api call here
       this.loading = true;
+      this.resetErrors()
       this.createUser(this.user)
         .then((user) => {
-          console.log('asdasd', user);
           this.text = `User ${user.name} successfully created.`;
           this.snackbar = true;
           this.$router.push({
             name: "admin",
+          });
+        })
+        .catch((error) => {
+          Object.keys(this.errors).forEach((key) => {
+            if (key in error) {
+              this.errors[key].message = error[key];
+              this.errors[key].hasError = true;
+            }
           });
         })
         .finally(() => {
@@ -182,9 +186,6 @@ export default {
         });
 
       console.log("CALL API", this.user);
-    },
-    showSelected() {
-      console.log(this.select);
     },
     displayAvatar(file) {
       if (file) {
@@ -195,6 +196,13 @@ export default {
         this.previewImage = require("@/assets/default.jpg");
       }
     },
+  },
+  mounted() {
+    this.$store.dispatch(
+      "auth/SET_SHOW_ICON",
+      true
+    );
+    this.resetErrors()
   },
 };
 </script>
