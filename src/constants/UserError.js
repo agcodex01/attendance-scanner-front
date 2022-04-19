@@ -20,6 +20,10 @@ const UserError = {
         message: null,
         hasError: false
     },
+    status: {
+        message: null,
+        hasError: false
+    },
 }
 
 export default UserError

@@ -13,7 +13,7 @@
           ></v-skeleton-loader>
         </div>
         <div v-else>
-          {{ currentDepartment || '' }}
+          <h3>{{ currentDepartment || 'No department selected.' }}</h3> 
           <vue-qr-reader
             v-on:code-scanned="codeArrived"
             :stop-on-scanned="false"

@@ -3,8 +3,10 @@ import App from './App.vue'
 import store from './store'
 import router from './router'
 import vuetify from './plugins/vuetify'
+import VueQRCodeComponent from 'vue-qr-generator'
 require('./websocket')
 
+Vue.component('qr-code', VueQRCodeComponent)
 
 Vue.config.productionTip = false
 

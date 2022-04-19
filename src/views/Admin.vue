@@ -1,12 +1,6 @@
 <template>
   <v-card elevation="10" class="mx-5 mt-5">
-    <v-tabs
-      v-model="tab"
-      background-color="deep-purple accent-4"
-      centered
-      dark
-      icons-and-text
-    >
+    <v-tabs v-model="tab" centered icons-and-text>
       <v-tabs-slider></v-tabs-slider>
 
       <v-tab href="#users" @click="fetchUsersFn">
@@ -34,13 +28,13 @@
         <v-card flat>
           <v-card-title>
             <v-btn
-              small
               elevation=""
               color="primary"
               :to="{ name: 'create_employee' }"
             >
-              Add New</v-btn
-            >
+              Add New
+              <v-icon dark> mdi-plus </v-icon>
+            </v-btn>
           </v-card-title>
           <v-card-title>
             Users
@@ -71,6 +65,21 @@
               >
                 {{ item.name }}
               </v-btn>
+            </template>
+            <template v-slot:item.type="{ item }">
+              <v-chip :color="item.type == 'admin' ? 'primary': 'warning'" dark label>
+                {{ item.type }}
+              </v-chip>
+            </template>
+            <template v-slot:item.status="{ item }">
+              <v-chip :color="item.status == 'active' ? 'green': 'red'" dark>
+                {{ item.status }}
+              </v-chip>
+            </template>
+             <template v-slot:item.position="{ item }">
+              
+                {{ getDisplayPosition(item.position)  }}
+             
             </template>
           </v-data-table>
         </v-card>
@@ -128,7 +137,9 @@
         <v-list>
           <v-list-item>
             <v-list-item-content>
-              <v-list-item-title> Current Department</v-list-item-title>
+              <v-list-item-title class="font-weight-bold">
+                Current Department</v-list-item-title
+              >
             </v-list-item-content>
             <v-list-item-content>
               <v-select
@@ -155,7 +166,6 @@ import UserConstant from "../constants/user";
 export default {
   name: "Admin",
   data: () => ({
-    text: "lorem dfsdfsd",
     searchEmployee: "",
     searchAttendance: "",
     searchLog: "",
@@ -211,7 +221,7 @@ export default {
         value: "user.name",
       },
       {
-        text: "Signin",
+        text: "Scan At",
         value: "created_at",
       },
       {
@@ -252,12 +262,12 @@ export default {
       await this.fetchLogs();
       this.loading = false;
     },
+    getDisplayPosition (position_value) {
+      return this.constants.positions.find(x => x.value == position_value).display
+    }
   },
   async mounted() {
-    this.$store.dispatch(
-      "auth/SET_SHOW_ICON",
-      true
-    );
+    this.$store.dispatch("auth/SET_SHOW_ICON", true);
     this.loading = true;
     this.location = this.currentDepartment;
     await this.fetchUsers();

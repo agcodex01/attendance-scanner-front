@@ -1,7 +1,7 @@
 <template>
-  <v-container class="">
+  <v-container class>
     <v-card elevation="11" class="pt-10 px-5">
-      <h2 class="text-uppercase">{{ title }}</h2>
+      <h2 class="pl-10">{{ title }}</h2>
 
       <v-form
         @submit.prevent="onCreateUser"
@@ -11,14 +11,10 @@
         class="mt-10 mb-6 pr-8 pl-8 pb-8 pt-4"
       >
         <v-row>
-          <v-col>
-            <v-img
-              max-width="200px"
-              max-height="200px"
-              position="center center"
-              :src="previewImage"
-            ></v-img>
-            <v-divider class="mb-3"></v-divider>
+          <v-col cols="4" class="text-center">
+            <v-avatar size="128" class="mb-5">
+              <v-img max-width="200px" max-height="200px" :src="previewImage"></v-img>
+            </v-avatar>
             <v-file-input
               accept="image/png, image/jpeg, image/bmp"
               placeholder="Pick an avatar"
@@ -31,59 +27,65 @@
               :error-messages="errors.avatar.message"
             ></v-file-input>
           </v-col>
-          <v-col>
+          <v-col cols="6">
+            <label for="name">Name</label>
             <v-text-field
+              id="name"
               v-model="user.name"
               append-icon="mdi-envelop"
               outlined
               color="purple"
-              error-count="2"
-              label="Name"
               required
+              dense
+              class="mt-3"
               :error="errors.name.hasError"
               :error-messages="errors.name.message"
             ></v-text-field>
+            <label for="email">Email</label>
             <v-text-field
+              id="email"
               v-model="user.email"
               append-icon="mdi-envelop"
               outlined
               color="purple"
-              error-count="2"
               :rules="emailRules"
-              label="E-mail"
               required
+              dense
+              class="mt-3"
             ></v-text-field>
+            <label for="position">Position</label>
             <v-select
+              id="position"
               v-model="user.position"
               :items="constants.positions"
               item-text="display"
               item-value="value"
-              label="Position"
               outlined
               single-line
+              dense
+              class="mt-3"
               :error="errors.position.hasError"
               :error-messages="errors.position.message"
             ></v-select>
+            <label for="department">Department</label>
             <v-select
+              id="department"
               v-model="user.department"
               :items="constants.departments"
               item-text="display"
               item-value="value"
-              label="Department"
               outlined
               single-line
+              dense
+              class="mt-3"
               :error="errors.department.hasError"
               :error-messages="errors.department.message"
             ></v-select>
             <div>
+              <v-btn x-large color="primary darken-4" class="mr-4 text" :to="{ name: 'admin' }">
+                <span class="white--text">Back</span>
+              </v-btn>
               <v-btn
-                x-large
-                color="primary darken-4"
-                class="mr-4 text"
-                :to="{ name: 'admin' }"
-              >
-                <span class="white--text">Back</span> </v-btn
-              ><v-btn
                 x-large
                 type="submit"
                 color="primary"
@@ -104,11 +106,8 @@
     </v-card>
     <v-snackbar v-model="snackbar" :timeout="2000">
       {{ text }}
-
       <template v-slot:action="{ attrs }">
-        <v-btn color="blue" text v-bind="attrs" @click="snackbar = false">
-          Close
-        </v-btn>
+        <v-btn color="blue" text v-bind="attrs" @click="snackbar = false">Close</v-btn>
       </template>
     </v-snackbar>
   </v-container>
@@ -127,7 +126,7 @@ export default {
     show2: false,
     constants: UserConstant,
     previewImage: require("@/assets/default.jpg"),
-    title: "Create user",
+    title: "Create User",
     passwordRules: [
       (v) => !!v || "Password is required",
       (v) => (v && v.length >= 8) || "Password must be less than 8 characters",
@@ -137,8 +136,8 @@ export default {
       (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
     ],
     user: {
-      name: null,
-      email: null,
+      name: '',
+      email: '',
       department: null,
       avatar: require("@/assets/default.jpg"),
       type: "employee",

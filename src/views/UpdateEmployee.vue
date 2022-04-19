@@ -1,103 +1,46 @@
 <template>
-  <v-container class="">
+  <v-container class>
     <v-card elevation="11" class="pt-10 px-5">
-      <h2 class="text-uppercase">{{ title }}</h2>
+      <h2 class="pl-10">{{ title }}</h2>
 
-      <v-form
-        @submit.prevent="onUpdateUser"
-        ref="form"
-        lazy-validation
-        class="mt-10 mb-6 pr-8 pl-8 pb-8 pt-4"
-      >
+      <v-form @submit.prevent="onUpdateUser" ref="form" lazy-validation class="mt-10 mb-6 pr-8 pl-8 pb-8 pt-4">
         <v-row>
-          <v-col cols="4" class="bg-primary">
-            <v-img
-              max-width="200px"
-              max-height="200px"
-              position="center center"
-              :src="previewImage"
-            ></v-img>
-            <v-divider class="mb-3"></v-divider>
-            <v-file-input
-              accept="image/png, image/jpeg, image/bmp"
-              placeholder="Pick an avatar"
-              prepend-icon="mdi-camera"
-              label="Avatar"
-              outlined
-              dense
-              @change="displayAvatar"
-              :error="errors.avatar.hasError"
-              :error-messages="errors.avatar.message"
-            ></v-file-input>
-            <h3>User QrCode</h3>
-            <v-img
-              max-width="200px"
-              max-height="200px"
-              position="center center"
-              :src="user.qrcode"
-            ></v-img>
+          <v-col cols="4" class="text-center">
+            <v-avatar size="128" class="mb-5">
+              <v-img max-width="200px" max-height="200px" :src="previewImage"></v-img>
+            </v-avatar>
+            <v-file-input accept="image/png, image/jpeg, image/bmp" placeholder="Pick an avatar"
+              prepend-icon="mdi-camera" label="Avatar" outlined dense @change="displayAvatar"
+              :error="errors.avatar.hasError" :error-messages="errors.avatar.message"></v-file-input>
+            <qr-code style="display:none" :text="userId" color="#900303" bg-color="#ffffff"></qr-code>
           </v-col>
-          <v-col>
-            <v-text-field
-              v-model="user.name"
-              append-icon="mdi-envelop"
-              outlined
-              color="purple"
-              error-count="2"
-              label="Name"
-              required
-              :error="errors.name.hasError"
-              :error-messages="errors.name.message"
-            ></v-text-field>
-            <v-text-field
-              v-model="user.email"
-              append-icon="mdi-envelop"
-              outlined
-              color="purple"
-              error-count="2"
-              :rules="emailRules"
-              label="E-mail"
-              required
-              :error="errors.email.hasError"
-              :error-messages="errors.email.message"
-            ></v-text-field>
-            <v-select
-              v-model="user.position"
-              :items="constants.positions"
-              item-text="display"
-              item-value="value"
-              label="Position"
-              outlined
-              single-line
-            ></v-select>
-            <v-select
-              v-model="user.department"
-              :items="constants.departments"
-              item-text="display"
-              item-value="value"
-              label="Department"
-              outlined
-              single-line
-              :error="errors.department.hasError"
-              :error-messages="errors.department.message"
-            ></v-select>
+          <v-col cols="6">
+            <label for="name">Name</label>
+            <v-text-field id="name" class="mt-3" v-model="user.name" append-icon="mdi-envelop" outlined color="purple"
+              required dense :error="errors.name.hasError" :error-messages="errors.name.message"></v-text-field>
+            <label for="email">Email</label>
+            <v-text-field id="email" class="mt-3" v-model="user.email" append-icon="mdi-envelop" outlined color="purple"
+              :rules="emailRules" required dense :error="errors.email.hasError" :error-messages="errors.email.message">
+            </v-text-field>
+            <label for="position">Position</label>
+            <v-select id="position" v-model="user.position" :items="constants.positions" item-text="display"
+              item-value="value" outlined single-line class="mt-3" dense></v-select>
+            <label for="department">Department</label>
+            <v-select id="department" v-model="user.department" :items="constants.departments" item-text="display"
+              item-value="value" outlined single-line class="mt-3" dense :error="errors.department.hasError"
+              :error-messages="errors.department.message"></v-select>
+            <label for="status">Status</label>
+            <v-select id="status" v-model="user.status" :items="constants.statuses" item-text="display"
+              item-value="value" outlined single-line class="mt-3" dense :error="errors.status.hasError"
+              :error-messages="errors.status.message"></v-select>
             <div>
-              <v-btn
-                x-large
-                color="primary darken-4"
-                class="mr-4 text"
-                :to="{ name: 'admin' }"
-              >
-                <span class="white--text">Back</span> </v-btn
-              ><v-btn
-                x-large
-                type="submit"
-                color="primary"
-                class="mr-4 text"
-                @click="validate"
-                outlined
-                :loading="loading"
-              >
+              <v-btn color="primary darken-4" class="mr-4 text" :to="{ name: 'admin' }">
+                <span class="white--text">Back</span>
+              </v-btn>
+              <v-btn color="warning" class="mr-4 text" @click="downloadQrCode">
+                <span class="white--text">Download QrCode</span>
+              </v-btn>
+              <v-btn type="submit" color="primary" class="mr-4 text" @click="validate" outlined :loading="loading">
                 <span>Update</span>
                 <template v-slot:loader>
                   <span>Loading...</span>
@@ -110,11 +53,8 @@
     </v-card>
     <v-snackbar v-model="snackbar" :timeout="2000">
       {{ text }}
-
       <template v-slot:action="{ attrs }">
-        <v-btn color="blue" text v-bind="attrs" @click="snackbar = false">
-          Close
-        </v-btn>
+        <v-btn color="blue" text v-bind="attrs" @click="snackbar = false">Close</v-btn>
       </template>
     </v-snackbar>
   </v-container>
@@ -130,14 +70,14 @@ export default {
     text: "",
     constants: UserConstant,
     previewImage: require("@/assets/default.jpg"),
-    title: "Update user",
+    title: "Update User",
     emailRules: [
       (v) => !!v || "E-mail is required",
       (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
     ],
     user: {
-      qrcode: null,
-      name: null,
+      id: '',
+      name: '',
       email: null,
       password: null,
       department: null,
@@ -145,10 +85,12 @@ export default {
       type: "employee",
       position: null,
       status: "active",
+      qrcode: ''
     },
     select: null,
     loading: false,
     errors: UserError,
+    userId: ''
   }),
   methods: {
     ...mapActions({
@@ -199,15 +141,27 @@ export default {
     getUrl(base64) {
       return URL.createObjectURL(new File([new Blob([base64])], "QrCode.png"));
     },
+    downloadQrCode() {
+      const fileName = `${this.user.name}_qrocode.png`
+      let canvas = document.getElementsByTagName("canvas")[0];
+      if (canvas.msToBlob) {
+        //for IE
+        let blob = canvas.msToBlob();
+        window.navigator.msSaveBlob(blob, fileName);
+      } else {
+        let link = document.createElement("a");
+        link.download = fileName;
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+      }
+      return false;
+    }
   },
   async mounted() {
-    this.$store.dispatch(
-      "auth/SET_SHOW_ICON",
-      true
-    );
     this.resetErrors();
     await this.fetchById(this.$route.params.id).then((user) => {
       this.previewImage = user.avatar;
+      this.userId = user.id.toString()
       this.user = user;
     });
   },
