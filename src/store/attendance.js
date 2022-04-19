@@ -57,7 +57,7 @@ export default {
          .then(({ data }) => {
             resolve(data);
           })
-          .catch((error) => reject(error.response.errors));
+          .catch((error) => reject(error.response.data));
       });
     },
     SET_DEPARTMENT({ commit }, data) {

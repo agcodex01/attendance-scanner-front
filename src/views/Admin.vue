@@ -27,11 +27,7 @@
       <v-tab-item value="users">
         <v-card flat>
           <v-card-title>
-            <v-btn
-              elevation=""
-              color="primary"
-              :to="{ name: 'create_employee' }"
-            >
+            <v-btn elevation="" color="primary" :to="{ name: 'create_employee' }">
               Add New
               <v-icon dark> mdi-plus </v-icon>
             </v-btn>
@@ -39,47 +35,30 @@
           <v-card-title>
             Users
             <v-spacer></v-spacer>
-            <v-text-field
-              v-model="searchEmployee"
-              append-icon="mdi-magnify"
-              label="Search"
-              single-line
-              hide-details
-            ></v-text-field>
+            <v-text-field v-model="searchEmployee" append-icon="mdi-magnify" label="Search" single-line hide-details>
+            </v-text-field>
           </v-card-title>
-          <v-data-table
-            :headers="userHeaders"
-            :items="users"
-            :items-per-page="5"
-            :search="searchEmployee"
-            :loading="loading"
-            loading-text="Fetching users"
-            class="elevation-1"
-          >
+          <v-data-table :headers="userHeaders" :items="users" :items-per-page="5" :search="searchEmployee"
+            :loading="loading" loading-text="Fetching users" class="elevation-1">
             <template v-slot:item.name="{ item }">
-              <v-btn
-                class="text-underlined"
-                :to="{ name: 'update_employee', params: { id: item.id } }"
-                small
-                text
-              >
+              <v-btn class="text-underlined" :to="{ name: 'update_employee', params: { id: item.id } }" small text>
                 {{ item.name }}
               </v-btn>
             </template>
             <template v-slot:item.type="{ item }">
-              <v-chip :color="item.type == 'admin' ? 'primary': 'warning'" dark label>
+              <v-chip :color="item.type == 'admin' ? 'primary' : 'warning'" dark label>
                 {{ item.type }}
               </v-chip>
             </template>
             <template v-slot:item.status="{ item }">
-              <v-chip :color="item.status == 'active' ? 'green': 'red'" dark>
+              <v-chip :color="item.status == 'active' ? 'green' : 'red'" dark>
                 {{ item.status }}
               </v-chip>
             </template>
-             <template v-slot:item.position="{ item }">
-              
-                {{ getDisplayPosition(item.position)  }}
-             
+            <template v-slot:item.position="{ item }">
+
+              {{ getDisplayPosition(item.position) }}
+
             </template>
           </v-data-table>
         </v-card>
@@ -89,23 +68,11 @@
           <v-card-title>
             Attendances
             <v-spacer></v-spacer>
-            <v-text-field
-              v-model="searchAttendance"
-              append-icon="mdi-magnify"
-              label="Search"
-              single-line
-              hide-details
-            ></v-text-field>
+            <v-text-field v-model="searchAttendance" append-icon="mdi-magnify" label="Search" single-line hide-details>
+            </v-text-field>
           </v-card-title>
-          <v-data-table
-            :headers="attendanceHeader"
-            :items="attendances"
-            :items-per-page="5"
-            :search="searchAttendance"
-            class="elevation-1"
-            loading-text="Fetching attendances.."
-            :loading="loading"
-          ></v-data-table>
+          <v-data-table :headers="attendanceHeader" :items="attendances" :items-per-page="5" :search="searchAttendance"
+            class="elevation-1" loading-text="Fetching attendances.." :loading="loading"></v-data-table>
         </v-card>
       </v-tab-item>
       <v-tab-item value="activity_logs">
@@ -113,23 +80,11 @@
           <v-card-title>
             Activity Logs
             <v-spacer></v-spacer>
-            <v-text-field
-              v-model="searchLog"
-              append-icon="mdi-magnify"
-              label="Search"
-              single-line
-              hide-details
-            ></v-text-field>
+            <v-text-field v-model="searchLog" append-icon="mdi-magnify" label="Search" single-line hide-details>
+            </v-text-field>
           </v-card-title>
-          <v-data-table
-            :headers="logHeader"
-            :items="logs"
-            :items-per-page="5"
-            :search="searchLog"
-            class="elevation-1"
-            loading-text="Fetching Logs..."
-            :loading="loading"
-          ></v-data-table>
+          <v-data-table :headers="logHeader" :items="logs" :items-per-page="5" :search="searchLog" class="elevation-1"
+            loading-text="Fetching Logs..." :loading="loading"></v-data-table>
         </v-card>
       </v-tab-item>
       <v-tab-item value="settings" class="pa-5">
@@ -138,22 +93,21 @@
           <v-list-item>
             <v-list-item-content>
               <v-list-item-title class="font-weight-bold">
-                Current Department</v-list-item-title
-              >
+                Current Department</v-list-item-title>
             </v-list-item-content>
             <v-list-item-content>
-              <v-select
-                v-model="location"
-                :items="constants.departments"
-                item-text="display"
-                item-value="value"
-                label="Select"
-                outlined
-                single-line
-                @change="setDepartment"
-                dense
-              ></v-select>
+              <v-select clearable v-model="location" :items="constants.departments" item-text="display" item-value="value"
+                label="Select" outlined single-line @change="setDepartment" dense></v-select>
+           
             </v-list-item-content>
+
+            <v-list-item-icon v-if="location">
+              <v-btn color="primary" :to="{name: 'department'}">
+                Goto
+                 <v-icon>mdi-login</v-icon>
+              </v-btn>
+             
+            </v-list-item-icon>
           </v-list-item>
         </v-list>
       </v-tab-item>
@@ -262,7 +216,7 @@ export default {
       await this.fetchLogs();
       this.loading = false;
     },
-    getDisplayPosition (position_value) {
+    getDisplayPosition(position_value) {
       return this.constants.positions.find(x => x.value == position_value).display
     }
   },

@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <v-snackbar  :color="type" v-model="showNotif" :timeout="2000">
+    <v-snackbar  :color="type" v-model="showNotif" :timeout="3000">
       {{ text }}
     </v-snackbar>
     <v-row justify="space-between">
@@ -117,6 +117,12 @@ export default {
           this.showNotif = true
           this.text = `${attendance.user.name} sign In successfully.`
         })
+        .catch((error) => {
+            console.log(error);
+            this.text = error.errors;
+            this.type = "red";
+            this.showNotif = true;
+          })
         .finally(() => {
           console.log("SCANNED: ", userId);
           this.processing = false;

@@ -1,6 +1,6 @@
 <template>
   <v-container fluid class="mt-5">
-    <v-snackbar :color="type" v-model="showNotif" :timeout="2000">
+    <v-snackbar :color="type" v-model="showNotif" :timeout="3000">
       {{ text }}
     </v-snackbar>
     <v-row>
