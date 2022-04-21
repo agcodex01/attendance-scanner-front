@@ -6,26 +6,15 @@
     <v-row>
       <v-col cols="3">
         <div v-if="loading">
-          <v-skeleton-loader
-            class="mx-auto"
-            max-width="300"
-            type="card"
-          ></v-skeleton-loader>
+          <v-skeleton-loader class="mx-auto" max-width="300" type="card"></v-skeleton-loader>
         </div>
         <div v-else>
           <h3>Gate Entrance Scanner</h3>
-          <vue-qr-reader
-            v-on:code-scanned="codeArrived"
-            :stop-on-scanned="false"
-          />
+          <vue-qr-reader v-on:code-scanned="codeArrived" :stop-on-scanned="false" />
           WebCam Scanned: {{ userId }}
           <h4 v-if="processing">
             Processing...
-            <v-progress-circular
-              :size="25"
-              color="primary"
-              indeterminate
-            ></v-progress-circular>
+            <v-progress-circular :size="25" color="primary" indeterminate></v-progress-circular>
           </h4>
         </div>
       </v-col>
@@ -33,27 +22,14 @@
       <v-col cols="9">
         <div v-if="isFetching">
           <v-row>
-            <v-skeleton-loader
-              type="list-item-avatar, divider, list-item-three-line, card-heading"
-              v-for="i in 3"
-              :key="i"
-              class="col-4 mb-4"
-            ></v-skeleton-loader>
+            <v-skeleton-loader type="list-item-avatar, divider, list-item-three-line, card-heading" v-for="i in 3"
+              :key="i" class="col-4 mb-4"></v-skeleton-loader>
           </v-row>
         </div>
         <div v-else>
-          <v-carousel
-            v-model="displayIndex"
-            cycle
-            hide-delimiter-background
-            show-arrows-on-hover
-            v-if="attendances.length > 0"
-            height="100%"
-          >
-            <v-carousel-item
-              v-for="(attendanceChunck, i) in attendances"
-              :key="i"
-            >
+          <v-carousel v-model="displayIndex" cycle hide-delimiter-background show-arrows-on-hover
+            v-if="attendances.length > 0" height="100%">
+            <v-carousel-item v-for="(attendanceChunck, i) in attendances" :key="i">
               <attendance-profile-list :attendances="attendanceChunck" />
             </v-carousel-item>
           </v-carousel>
