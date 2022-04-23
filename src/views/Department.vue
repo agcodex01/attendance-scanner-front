@@ -20,7 +20,7 @@
       </v-col>
 
       <v-col cols="9">
-        <div v-if="loading">
+        <div v-if="isFetching">
           <v-row>
             <v-skeleton-loader type="list-item-avatar, divider, list-item-three-line, card-heading" v-for="i in 3"
               :key="i" class="col-4 mb-4"></v-skeleton-loader>
@@ -69,6 +69,7 @@ export default {
     ...mapGetters({
       attendances: "attendance/GET_ATTENDANCES",
       currentDepartment: "attendance/GET_CURRENT_DEPARTMENT",
+      isFetching: "attendance/GET_ATTENDANCES_FETCHING",
     }),
   },
   methods: {
