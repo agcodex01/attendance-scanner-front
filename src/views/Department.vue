@@ -92,6 +92,7 @@ export default {
           },
         }).then((attendance) => {
           this.showNotif = true
+          this.type = 'green'
           this.text = `${attendance.user.name} sign In successfully.`
         })
           .catch((error) => {
