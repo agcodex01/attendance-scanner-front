@@ -1,7 +1,13 @@
 <template>
   <v-container class>
     <v-card elevation="11" class="pt-10 px-5">
-      <h2 class="pl-10">{{ title }}</h2>
+      <div class="d-flex justify-space-between align-center">
+        <v-breadcrumbs :items="links">
+          <template v-slot:divider>
+            <v-icon>mdi-chevron-right</v-icon>
+          </template>
+        </v-breadcrumbs>
+      </div>
 
       <v-form @submit.prevent="onUpdateUser" ref="form" lazy-validation class="mt-10 mb-6 pr-8 pl-8 pb-8 pt-4">
         <v-row>
@@ -34,7 +40,7 @@
               item-value="value" outlined single-line class="mt-3" dense :error="errors.status.hasError"
               :error-messages="errors.status.message"></v-select>
             <div>
-              <v-btn color="primary darken-4" class="mr-4 text" :to="{ name: 'admin' }">
+              <v-btn color="primary darken-4" class="mr-4 text" :to="{ name: 'users' }">
                 <span class="white--text">Back</span>
               </v-btn>
               <v-btn color="warning" class="mr-4 text" @click="downloadQrCode">
@@ -90,7 +96,24 @@ export default {
     select: null,
     loading: false,
     errors: UserError,
-    userId: ''
+    userId: '',
+    links: [
+      {
+        text: 'ECCEL',
+        disabled: false,
+        href: '/admin',
+      },
+      {
+        text: 'Users',
+        disabled: false,
+        href: '/admin/users'
+      },
+      {
+        text: 'Update User',
+        disabled: true,
+
+      }
+    ]
   }),
   methods: {
     ...mapActions({

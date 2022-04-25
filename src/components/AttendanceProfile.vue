@@ -15,20 +15,26 @@
         </v-list-item-content>
       </v-list-item>
     </v-list>
-    <v-card-text>
-      <v-sheet color="white" elevation="3" height="75" width="100%" class="mb-1">
+    <v-card-text class="pa-0">
+      <v-sheet color="white"  width="100%">
         <v-card-subtitle class="pb-0"> Current Location </v-card-subtitle>
-        <v-card-text class="text--primary font-weight-bold">
+        <v-card-text class="text--primary font-weight-bold pb-0">
           <div>{{ attendance.location }}</div>
         </v-card-text>
       </v-sheet>
-      <v-sheet color="white" elevation="3" height="75" width="100%" class="mb-1">
+      <v-sheet color="white"  width="100%">
+        <v-card-subtitle class="pb-0"> Previous Location </v-card-subtitle>
+        <v-card-text class="text--primary font-weight-bold pb-0">
+          <div>{{ attendance.prev_location || 'Inside the school' }}</div>
+        </v-card-text>
+      </v-sheet>
+      <v-sheet color="white" width="100%">
         <v-card-subtitle class="pb-0"> Sign In </v-card-subtitle>
-        <v-card-text class="text--primary font-weight-bold">
+        <v-card-text class="text--primary font-weight-bold pb-0">
           <div>{{ attendance.signin }}</div>
         </v-card-text>
       </v-sheet>
-      <v-sheet color="white" elevation="3" height="75" width="100%" class="mb-1">
+      <v-sheet color="white" width="100%" class="mb-1">
         <v-card-subtitle class="pb-0"> Sign Out </v-card-subtitle>
         <v-card-text class="text--primary font-weight-bold">
           <div>{{ attendance.signout || '--/--/---- --:-- --' }}</div>

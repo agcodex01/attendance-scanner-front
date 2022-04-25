@@ -34,12 +34,32 @@ const routes = [
         component: () => import('../views/Admin.vue')
       },
       {
-        path: '/employees/create',
+        path: '/admin/users',
+        name: 'users',
+        component: () => import('../views/Users.vue')
+      },
+      {
+        path: '/admin/attendances',
+        name: 'attendances',
+        component: () => import('../views/Attendances.vue')
+      },
+      {
+        path: '/admin/logs',
+        name: 'logs',
+        component: () => import('../views/Logs.vue')
+      },
+      {
+        path: '/admin/setting',
+        name: 'setting',
+        component: () => import('../views/Setting.vue')
+      },
+      {
+        path: '/admin/users/create',
         name: 'create_employee',
         component: () => import('../views/CreateEmployee.vue')
       },
       {
-        path: '/employees/:id/update',
+        path: '/admin/users/:id/update',
         name: 'update_employee',
         component: () => import('../views/UpdateEmployee.vue')
       },

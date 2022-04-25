@@ -1,99 +1,45 @@
 <template>
   <v-container class>
     <v-card elevation="11" class="pt-10 px-5">
-      <h2 class="pl-10">{{ title }}</h2>
-
-      <v-form
-        @submit.prevent="onCreateUser"
-        ref="form"
-        v-model="valid"
-        lazy-validation
-        class="mt-10 mb-6 pr-8 pl-8 pb-8 pt-4"
-      >
+      <div class="d-flex justify-space-between align-center">
+        <v-breadcrumbs :items="links">
+          <template v-slot:divider>
+            <v-icon>mdi-chevron-right</v-icon>
+          </template>
+        </v-breadcrumbs>
+      </div>
+      <v-form @submit.prevent="onCreateUser" ref="form" v-model="valid" lazy-validation
+        class="mt-10 mb-6 pr-8 pl-8 pb-8 pt-4">
         <v-row>
           <v-col cols="4" class="text-center">
             <v-avatar size="128" class="mb-5">
               <v-img max-width="200px" max-height="200px" :src="previewImage"></v-img>
             </v-avatar>
-            <v-file-input
-              accept="image/png, image/jpeg, image/bmp"
-              placeholder="Pick an avatar"
-              prepend-icon="mdi-camera"
-              label="Avatar"
-              outlined
-              dense
-              @change="displayAvatar"
-              :error="errors.avatar.hasError"
-              :error-messages="errors.avatar.message"
-            ></v-file-input>
+            <v-file-input accept="image/png, image/jpeg, image/bmp" placeholder="Pick an avatar"
+              prepend-icon="mdi-camera" label="Avatar" outlined dense @change="displayAvatar"
+              :error="errors.avatar.hasError" :error-messages="errors.avatar.message"></v-file-input>
           </v-col>
           <v-col cols="6">
             <label for="name">Name</label>
-            <v-text-field
-              id="name"
-              v-model="user.name"
-              append-icon="mdi-envelop"
-              outlined
-              color="purple"
-              required
-              dense
-              class="mt-3"
-              :error="errors.name.hasError"
-              :error-messages="errors.name.message"
-            ></v-text-field>
+            <v-text-field id="name" v-model="user.name" append-icon="mdi-envelop" outlined color="purple" required dense
+              class="mt-3" :error="errors.name.hasError" :error-messages="errors.name.message"></v-text-field>
             <label for="email">Email</label>
-            <v-text-field
-              id="email"
-              v-model="user.email"
-              append-icon="mdi-envelop"
-              outlined
-              color="purple"
-              :rules="emailRules"
-              required
-              dense
-              class="mt-3"
-            ></v-text-field>
+            <v-text-field id="email" v-model="user.email" append-icon="mdi-envelop" outlined color="purple"
+              :rules="emailRules" required dense class="mt-3"></v-text-field>
             <label for="position">Position</label>
-            <v-select
-              id="position"
-              v-model="user.position"
-              :items="constants.positions"
-              item-text="display"
-              item-value="value"
-              outlined
-              single-line
-              dense
-              class="mt-3"
-              :error="errors.position.hasError"
-              :error-messages="errors.position.message"
-            ></v-select>
+            <v-select id="position" v-model="user.position" :items="constants.positions" item-text="display"
+              item-value="value" outlined single-line dense class="mt-3" :error="errors.position.hasError"
+              :error-messages="errors.position.message"></v-select>
             <label for="department">Department</label>
-            <v-select
-              id="department"
-              v-model="user.department"
-              :items="constants.departments"
-              item-text="display"
-              item-value="value"
-              outlined
-              single-line
-              dense
-              class="mt-3"
-              :error="errors.department.hasError"
-              :error-messages="errors.department.message"
-            ></v-select>
+            <v-select id="department" v-model="user.department" :items="constants.departments" item-text="display"
+              item-value="value" outlined single-line dense class="mt-3" :error="errors.department.hasError"
+              :error-messages="errors.department.message"></v-select>
             <div>
-              <v-btn x-large color="primary darken-4" class="mr-4 text" :to="{ name: 'admin' }">
+              <v-btn color="primary darken-4" class="mr-4 text" :to="{ name: 'users' }">
                 <span class="white--text">Back</span>
               </v-btn>
-              <v-btn
-                x-large
-                type="submit"
-                color="primary"
-                class="mr-4 text"
-                @click="validate"
-                outlined
-                :loading="loading"
-              >
+              <v-btn  type="submit" color="primary" class="mr-4 text" @click="validate" outlined
+                :loading="loading">
                 <span>Register</span>
                 <template v-slot:loader>
                   <span>Loading...</span>
@@ -147,6 +93,23 @@ export default {
     select: null,
     loading: false,
     errors: UserError,
+    links: [
+      {
+        text: 'ECCEL',
+        disabled: false,
+        href: '/admin',
+      },
+      {
+        text: 'Users',
+        disabled: false,
+        href: '/admin/users'
+      },
+       {
+        text: 'Create User',
+        disabled: true,
+
+      }
+    ]
   }),
   methods: {
     ...mapActions({
@@ -169,7 +132,7 @@ export default {
           this.text = `User ${user.name} successfully created.`;
           this.snackbar = true;
           this.$router.push({
-            name: "admin",
+            name: "users",
           });
         })
         .catch((error) => {

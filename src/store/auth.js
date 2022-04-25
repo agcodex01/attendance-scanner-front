@@ -9,6 +9,8 @@ export default {
   }),
   getters: {
     GET_USER: (state) => {
+      const user = JSON.parse(localStorage.getItem('user'))
+      if (user) return user
       return state.user;
     },
     GET_TOKEN: (state) => {

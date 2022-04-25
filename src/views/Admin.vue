@@ -1,109 +1,39 @@
 <template>
-  <v-card elevation="10" class="mx-5 mt-5">
-    <v-tabs v-model="tab" centered icons-and-text>
-      <v-tabs-slider></v-tabs-slider>
+  <v-card elevation="3" class="mx-5 mt-5 py-5">
+    <div class="d-flex justify-space-between align-center mb-6">
+      <v-breadcrumbs :items="links">
+        <template v-slot:divider>
+          <v-icon>mdi-chevron-right</v-icon>
+        </template>
+      </v-breadcrumbs>
+    </div>
+    <div class="px-3">
+      <v-row>
+        <v-col v-for="stat in stats" :key="stat">
+          <v-card elevation="3" max-width="300px">
+            <v-card-title>
+              <v-list-item class="grow">
+                <v-list-item-avatar>
+                  <v-icon class="mr-1">
+                    {{ stat.icon }}
+                  </v-icon>
+                </v-list-item-avatar>
 
-      <v-tab href="#users" @click="fetchUsersFn">
-        Users
-        <v-icon>mdi-account</v-icon>
-      </v-tab>
+                <v-list-item-content>
+                  <v-list-item-title> {{ stat.label }}</v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item class="grow">
+                <v-list-item-content>
+                  <v-list-item-title class="big-32"> {{ stat.total }} </v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-card-title>
+          </v-card>
+        </v-col>
+      </v-row>
 
-      <v-tab href="#attendances" @click="fetchAttendancesFn">
-        Attendances
-        <v-icon>mdi-note</v-icon>
-      </v-tab>
-
-      <v-tab href="#activity_logs" @click="fetchLogsFn">
-        Logs
-        <v-icon>mdi-account-box</v-icon>
-      </v-tab>
-      <v-tab href="#settings" @click="fetchLogsFn">
-        Settings
-        <v-icon>mdi-wrench</v-icon>
-      </v-tab>
-    </v-tabs>
-
-    <v-tabs-items v-model="tab">
-      <v-tab-item value="users">
-        <v-card flat>
-          <v-card-title>
-            <v-btn elevation="" color="primary" :to="{ name: 'create_employee' }">
-              Add New
-              <v-icon dark> mdi-plus </v-icon>
-            </v-btn>
-          </v-card-title>
-          <v-card-title>
-            Users
-            <v-spacer></v-spacer>
-            <v-text-field v-model="searchEmployee" append-icon="mdi-magnify" label="Search" single-line hide-details>
-            </v-text-field>
-          </v-card-title>
-          <v-data-table :headers="userHeaders" :items="users" :items-per-page="5" :search="searchEmployee"
-            :loading="loading" loading-text="Fetching users" class="elevation-1">
-            <template v-slot:item.name="{ item }">
-              <v-btn class="text-underlined" :to="{ name: 'update_employee', params: { id: item.id } }" small text>
-                {{ item.name }}
-              </v-btn>
-            </template>
-            <template v-slot:item.type="{ item }">
-              <v-chip :color="item.type == 'admin' ? 'primary' : 'warning'" dark label>
-                {{ item.type }}
-              </v-chip>
-            </template>
-            <template v-slot:item.status="{ item }">
-              <v-chip :color="item.status == 'active' ? 'green' : 'red'" dark>
-                {{ item.status }}
-              </v-chip>
-            </template>
-            <template v-slot:item.position="{ item }">
-
-              {{ getDisplayPosition(item.position) }}
-
-            </template>
-          </v-data-table>
-        </v-card>
-      </v-tab-item>
-      <v-tab-item value="attendances">
-        <v-card flat>
-          <v-card-title>
-            Attendances
-            <v-spacer></v-spacer>
-            <v-text-field v-model="searchAttendance" append-icon="mdi-magnify" label="Search" single-line hide-details>
-            </v-text-field>
-          </v-card-title>
-          <v-data-table :headers="attendanceHeader" :items="attendances" :items-per-page="5" :search="searchAttendance"
-            class="elevation-1" loading-text="Fetching attendances.." :loading="loading"></v-data-table>
-        </v-card>
-      </v-tab-item>
-      <v-tab-item value="activity_logs">
-        <v-card flat>
-          <v-card-title>
-            Activity Logs
-            <v-spacer></v-spacer>
-            <v-text-field v-model="searchLog" append-icon="mdi-magnify" label="Search" single-line hide-details>
-            </v-text-field>
-          </v-card-title>
-          <v-data-table :headers="logHeader" :items="logs" :items-per-page="5" :search="searchLog" class="elevation-1"
-            loading-text="Fetching Logs..." :loading="loading"></v-data-table>
-        </v-card>
-      </v-tab-item>
-      <v-tab-item value="settings" class="pa-5">
-        <h1>Settings</h1>
-        <v-list>
-          <v-list-item>
-            <v-list-item-content>
-              <v-list-item-title class="font-weight-bold">
-                Current Department</v-list-item-title>
-            </v-list-item-content>
-            <v-list-item-content>
-              <v-select clearable v-model="location" :items="constants.departments" item-text="display" item-value="value"
-                label="Select" outlined single-line @change="setDepartment" dense></v-select>
-           
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
-      </v-tab-item>
-    </v-tabs-items>
+    </div>
   </v-card>
 </template>
 <script>
@@ -177,47 +107,42 @@ export default {
     ],
     loading: false,
     location: null,
+    links: [
+      {
+        text: 'ECCEL',
+        disabled: false,
+        href: 'breadcrumbs_dashboard',
+      },
+      {
+        text: 'Dashboard',
+        disabled: true,
+        href: 'breadcrumbs_link_1',
+      }
+    ]
   }),
   computed: {
     ...mapGetters({
-      users: "user/GET_USERS",
-      attendances: "attendance/GET_ALL",
-      logs: "log/GET_LOGS",
-      currentDepartment: "attendance/GET_CURRENT_DEPARTMENT",
+      stats: "admin/GET_STATS",
+
     }),
   },
   methods: {
     ...mapActions({
-      fetchUsers: "user/GET_USERS",
-      fetchAttendances: "attendance/GET_ALL",
-      fetchLogs: "log/GET_LOGS",
-      setDepartment: "attendance/SET_DEPARTMENT",
+      fetchStats: "admin/GET_STATS",
     }),
-    async fetchUsersFn() {
-      this.loading = true;
-      await this.fetchAttendances();
-      this.loading = false;
-    },
-    async fetchAttendancesFn() {
-      this.loading = true;
-      await this.fetchAttendances();
-      this.loading = false;
-    },
-    async fetchLogsFn() {
-      this.loading = true;
-      await this.fetchLogs();
-      this.loading = false;
-    },
-    getDisplayPosition(position_value) {
-      return this.constants.positions.find(x => x.value == position_value).display
-    }
+
   },
   async mounted() {
-    this.$store.dispatch("auth/SET_SHOW_ICON", true);
     this.loading = true;
     this.location = this.currentDepartment;
-    await this.fetchUsers();
+    await this.fetchStats();
     this.loading = false;
   },
 };
 </script>
+
+<style>
+.big-32 {
+  font-size: 32px !important;
+}
+</style>
