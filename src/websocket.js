@@ -6,8 +6,8 @@ const token = localStorage.getItem('token')
 window.Echo = new Echo({
   broadcaster: 'pusher',
   key: 'app_key',
-  wsHost: '192.168.254.103',
-  authEndpoint: 'http://192.168.254.103:8000/broadcasting/auth',
+  wsHost: '192.168.1.2',
+  authEndpoint: 'http://192.168.1.2:8000/broadcasting/auth',
   encrypted: true,
   forceTLS: false,
   wsPort: 6001,

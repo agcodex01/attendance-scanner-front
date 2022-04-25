@@ -12,7 +12,7 @@
           width="40"
         />
 
-        <h2>EVSU EMPLOYEE TRACKER</h2>
+        <h2>EVSU-CC EMPLOYEE LOCATOR</h2>
       </div>
 
       <v-spacer></v-spacer>

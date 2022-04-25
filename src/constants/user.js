@@ -6,7 +6,12 @@ const UserConstant = {
     { display: "Associate Professor II", value: "associate_prof_2" },
     { display: "Associate Professor III", value: "associate_prof_3" },
     { display: "Associate Professor IV", value: "associate_prof_4" },
+    { display: "Associate Professor V", value: "associate_prof_5" },
     { display: "Assistant Professor I", value: "assistant_prof_1" },
+    { display: "Assistant Professor II", value: "assistant_prof_2" },
+    { display: "Assistant Professor III", value: "assistant_prof_3" },
+    { display: "Assistant Professor IV", value: "assistant_prof_4" },
+    { display: "Assistant Professor V", value: "assistant_prof_5" },
   ],
   types: [
     { display: "Admin", value: "admin" },
@@ -14,7 +19,7 @@ const UserConstant = {
   ],
   statuses: [
     { display: "Active", value: "active" },
-    { display: "In Active", value: "inactive" },
+    { display: "Inactive", value: "inactive" },
   ],
   departments: [
     {
@@ -22,8 +27,52 @@ const UserConstant = {
       value: "IT Department",
     },
     {
-      display: "SASO Department",
-      value: "SASO Department",
+      display: "Education Department",
+      value: "Education Department",
+    },
+    {
+      display: "Entrepreneur Department",
+      value: "Entrepreneur Department",
+    },
+    {
+      display: "Fishery Department",
+      value: "Fishery Department",
+    },
+    {
+      display: "Admin Office",
+      value: "Admin Office",
+    },
+    {
+      display: "SASO Office",
+      value: "SASO Office",
+    },
+    {
+      display: "Accounting",
+      value: "Accounting",
+    },
+    {
+      display: "Registrar",
+      value: "Registrar",
+    },
+    {
+      display: "Cashier",
+      value: "Cashier",
+    },
+    {
+      display: "HRMO",
+      value: "HRMO",
+    },
+    {
+      display: "CMDC",
+      value: "CMDC",
+    },
+    {
+      display: "Library",
+      value: "Library",
+    },
+    {
+      display: "Clinic",
+      value: "Clinic",
     },
   ],
 };

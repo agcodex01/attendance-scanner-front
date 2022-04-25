@@ -3,7 +3,7 @@
     <v-container fill-height fluid>
       <v-row justify="center" align="center">
         <v-col cols="10" sm="2" md="4">
-          <h1 class="text-h3 text-center">Evsu Employee Tracker</h1>
+          <h1 class="text-h3 text-center">EVSU-CC Employee Locator</h1>
           <v-img src="@/assets/login.png"> </v-img>
         </v-col>
         <v-col cols="12" sm="4" md="4" offset-md="2">

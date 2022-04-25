@@ -28,7 +28,7 @@
         </div>
         <div v-else>
           <v-carousel v-model="displayIndex" cycle wi hide-delimiter-background show-arrows-on-hover
-            v-if="attendances.length > 0">
+            v-if="attendances.length > 0" height="100%">
             <v-carousel-item v-for="(attendanceChunck, i) in attendances" :key="i">
               <attendance-profile-list :attendances="attendanceChunck" />
             </v-carousel-item>

@@ -14,7 +14,7 @@
       </v-tab>
 
       <v-tab href="#activity_logs" @click="fetchLogsFn">
-        Activity logs
+        Logs
         <v-icon>mdi-account-box</v-icon>
       </v-tab>
       <v-tab href="#settings" @click="fetchLogsFn">
@@ -100,14 +100,6 @@
                 label="Select" outlined single-line @change="setDepartment" dense></v-select>
            
             </v-list-item-content>
-
-            <v-list-item-icon v-if="location">
-              <v-btn color="primary" :to="{name: 'department'}">
-                Goto
-                 <v-icon>mdi-login</v-icon>
-              </v-btn>
-             
-            </v-list-item-icon>
           </v-list-item>
         </v-list>
       </v-tab-item>
@@ -165,7 +157,7 @@ export default {
         value: "signout",
       },
       {
-        text: "Location",
+        text: "Current Location",
         value: "location",
       },
     ],
