@@ -93,16 +93,19 @@ export default {
         }).then((attendance) => {
           this.showNotif = true
           this.type = 'green'
-          this.text = `${attendance.user.name} sign ${attendance.prev_location == this.currentDepartment ? 'out': 'in' } successfully.`
+          this.text = `${attendance.user.name} sign ${attendance.prev_location == this.currentDepartment ? 'out' : 'in'} successfully.`
         })
           .catch((error) => {
-            console.log(error);
-            if (typeof (error.errors) == 'object') {
-              if ('location' in error.errors) {
-                this.text = error.errors.location[0]
-              }
+            if (error.status == 404) {
+              this.text = 'Invalid QrCode scanned.'
             } else {
-              this.text = error.errors;
+              if (typeof (error.data.errors) == 'object') {
+                if ('location' in error.data.errors) {
+                  this.text = error.errors.location[0]
+                }
+              } else {
+                this.text = error.data.errors;
+              }
             }
 
             this.type = "red";

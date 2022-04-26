@@ -48,7 +48,7 @@ export default {
             commit("SET_SIGN_IN", data);
             resolve(data);
           })
-          .catch((error) => reject(error.response.data));
+          .catch((error) => reject(error.response));
       });
     },
     UPDATE_LOCATION(context, { id, location }) {
@@ -57,7 +57,7 @@ export default {
          .then(({ data }) => {
             resolve(data);
           })
-          .catch((error) => reject(error.response.data));
+          .catch((error) => reject(error.response));
       });
     },
     SET_DEPARTMENT({ commit }, data) {

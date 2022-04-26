@@ -91,7 +91,13 @@ export default {
             this.showNotif = true;
           })
           .catch((error) => {
-            this.text = error.errors;
+            console.log(error);
+            if (error.status == 404) {
+              this.text = 'Invalid QrCode scanned.'
+            } else {
+              this.text = error.data.errors;
+            }
+
             this.type = "red";
             this.showNotif = true;
           })
