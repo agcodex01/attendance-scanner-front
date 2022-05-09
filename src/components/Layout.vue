@@ -9,7 +9,7 @@
       <v-spacer></v-spacer>
 
       <v-btn text>
-        <span class="mr-2">Time: {{ time }}</span>
+        <span class="mr-2">{{  date + ' ' +   time }}</span>
       </v-btn>
     </v-app-bar>
     <v-navigation-drawer v-model="drawer" absolute app>
@@ -82,9 +82,10 @@ export default {
   name: 'Layout',
   data: () => ({
     time: null,
-    drawer: true,
+    drawer: false,
     group: null,
-    showLinks: false
+    showLinks: false,
+    date: null,
   }),
   methods: {
     ...mapActions({
@@ -106,7 +107,9 @@ export default {
   },
   mounted() {
     setInterval(() => {
-      this.time = new Date().toLocaleTimeString();
+      let now = new Date()
+      this.date = now.toDateString()
+      this.time = now.toLocaleTimeString();
     }, 1000);
     window.Echo.channel("signin").listen("NewSignIn", async () => {
       this.$store.dispatch("attendance/GET_ATTENDANCES");

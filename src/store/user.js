@@ -11,10 +11,10 @@ export default {
     GET_USER: state => state.user
   },
   actions: {
-    async GET_USERS({ commit }) {
+    async GET_USERS({ commit }, filter) {
       commit("SET_USERS", []);
       return new Promise((resolve, reject) => {
-        UserService.getUsers({})
+        UserService.getUsers(filter)
           .then(({ data }) => {
             commit("SET_USERS", data);
             resolve(data);

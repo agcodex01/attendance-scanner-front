@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <v-snackbar :color="type" v-model="showNotif" :timeout="3000">
+    <v-snackbar height="80px" min-width="1000px" class="text-center" top centered :color="type" v-model="showNotif" :timeout="3000">
       {{ text }}
     </v-snackbar>
     <v-row justify="space-between">
@@ -134,3 +134,10 @@ export default {
   },
 };
 </script>
+
+<style>
+.v-snack__content {
+  font-size: 1.875rem !important;
+  text-align: center;
+}
+</style>

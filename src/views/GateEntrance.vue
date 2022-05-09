@@ -1,6 +1,7 @@
 <template>
   <v-container fluid class="mt-5">
-    <v-snackbar :color="type" v-model="showNotif" :timeout="3000">
+    <v-snackbar height="80px" min-width="1000px" class="text-center" top centered :color="type" v-model="showNotif"
+      :timeout="3000">
       {{ text }}
     </v-snackbar>
     <v-row>
@@ -10,15 +11,15 @@
         </div>
         <div v-else>
           <h3>Gate Entrance Scanner</h3>
-          <vue-qr-reader v-on:code-scanned="codeArrived" :stop-on-scanned="false" />
+          <vue-qr-reader style="width:100%" v-on:code-scanned="codeArrived" :stop-on-scanned="false" />
           WebCam Scanned: {{ userId }}
           <h4 v-if="processing">
             Processing...
             <v-progress-circular :size="25" color="primary" indeterminate></v-progress-circular>
           </h4>
         </div>
+        <v-btn color="primary" class="mt-3" @click="openSearchUser">Search User</v-btn>
       </v-col>
-
       <v-col cols="9">
         <div v-if="isFetching">
           <v-row>
@@ -39,17 +40,37 @@
         </div>
       </v-col>
     </v-row>
+    <v-dialog v-model="dialog" max-width="500px">
+      <v-card class="py-8">
+        <v-card-text>
+          <v-select v-model="selectedUser" :items="scanInUsers" item-text="name" item-value="atttendance_id" key="id"
+            label="User" outlined dense class="col-3" @change="setSelectedAttendance" clearable>
+          </v-select>
+        </v-card-text>
+        <v-card-text>
+          <attendance-profile v-if="searchAttendance" :attendance="searchAttendance" />
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn text @click="dialog = false" block outlined color="primary">
+            Close
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 <script>
 import VueQrReader from "vue-qr-reader/dist/lib/vue-qr-reader.umd.js";
 import { mapActions, mapGetters } from "vuex";
-import AttendanceProfileList from "../components/AttendanceProfileList.vue";
+import AttendanceProfileList from "../components/AttendanceProfileList";
+import AttendanceProfile from "../components/AttendanceProfile";
 export default {
   name: "GateEntrance",
   components: {
     VueQrReader,
     AttendanceProfileList,
+    AttendanceProfile,
   },
   data: () => ({
     afterScan: null,
@@ -61,6 +82,10 @@ export default {
     loading: false,
     showNotif: false,
     type: "green",
+    dialog: false,
+    searchAttendance: null,
+    selectedUser: null,
+    scanInUsers: []
   }),
   computed: {
     ...mapGetters({
@@ -91,7 +116,6 @@ export default {
             this.showNotif = true;
           })
           .catch((error) => {
-            console.log(error);
             if (error.status == 404) {
               this.text = 'Invalid QrCode scanned.'
             } else {
@@ -109,6 +133,34 @@ export default {
         this.afterScan = currentTime;
       }
     },
+    openSearchUser() {
+      this.attendances.forEach(cA => {
+        if (!Array.isArray(cA)) {
+          cA = Object.values(cA)
+        }
+        cA.forEach(a => {
+          this.scanInUsers.push({
+            name: a.user.name,
+            atttendance_id: a.id
+          })
+        })
+      });
+      this.dialog = true
+    },
+    setSelectedAttendance(attendance_id) {
+      this.searchAttendance = null
+      this.attendances.forEach(cA => {
+        if (!Array.isArray(cA)) {
+          cA = Object.values(cA)
+        }
+
+        cA.forEach(a => {
+          if (a.id == attendance_id) {
+            this.searchAttendance = a
+          }
+        })
+      });
+    }
   },
   async mounted() {
     this.$store.dispatch(
@@ -118,6 +170,19 @@ export default {
     this.loading = true;
     await this.fetchAttendance({});
     this.loading = false;
+    console.log('A', this.attendances);
   },
 };
 </script>
+
+<style>
+.v-dialog__content {
+  align-items: flex-start;
+  justify-content: flex-center;
+}
+
+.v-snack__content {
+  font-size: 1.875rem !important;
+  text-align: center;
+}
+</style>

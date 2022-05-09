@@ -1,86 +1,20 @@
 <template>
-  <v-card elevation="6">
-    <v-list two-line class="mb-0" color="#900303">
-      <v-list-item class="white--text font-weight-bold">
-        <v-list-item-avatar>
-          <v-img :src="
-            attendance.user.avatar || require('@/assets/default_user.png')
-          "></v-img>
-        </v-list-item-avatar>
-
-        <v-list-item-content>
-          <v-list-item-title v-text="attendance.user.name"></v-list-item-title>
-          <v-list-item-subtitle class="white--text" v-text="fnGetPositionsDisplay(attendance.user.position)">
-          </v-list-item-subtitle>
-        </v-list-item-content>
-      </v-list-item>
-    </v-list>
-    <v-card-text class="pa-0">
-      <v-sheet color="white"  width="100%">
-        <v-card-subtitle class="pb-0"> Current Location </v-card-subtitle>
-        <v-card-text class="text--primary font-weight-bold pb-0">
-          <div>{{ attendance.location }}</div>
-        </v-card-text>
-      </v-sheet>
-      <v-sheet color="white"  width="100%">
-        <v-card-subtitle class="pb-0"> Previous Location </v-card-subtitle>
-        <v-card-text class="text--primary font-weight-bold pb-0">
-          <div>{{ attendance.prev_location || 'Inside the school' }}</div>
-        </v-card-text>
-      </v-sheet>
-      <v-sheet color="white" width="100%">
-        <v-card-subtitle class="pb-0"> Sign In </v-card-subtitle>
-        <v-card-text class="text--primary font-weight-bold pb-0">
-          <div>{{ attendance.signin }}</div>
-        </v-card-text>
-      </v-sheet>
-      <v-sheet color="white" width="100%" class="mb-1">
-        <v-card-subtitle class="pb-0"> Sign Out </v-card-subtitle>
-        <v-card-text class="text--primary font-weight-bold">
-          <div>{{ attendance.signout || '--/--/---- --:-- --' }}</div>
-        </v-card-text>
-      </v-sheet>
-    </v-card-text>
-
-
-    <!-- <v-card-subtitle class="pb-0 text-center"> Current Location </v-card-subtitle>
-    <v-card-text class="text--primary font-weight-bold text-center">
-      <div>{{ attendance.location }}</div>
-    </v-card-text>
+  <v-card elevation="16" class="mx-auto text-center pb-4" max-width="300px">
+    <v-avatar color="grey" size="132" class="mt-8 mb-n16">
+      <v-img :src="
+        attendance.user.avatar || require('@/assets/default_user.png')
+      "></v-img>
+    </v-avatar>
+    <h5 class="text-h5 font-weight-bold" style="margin-top:96px">{{ attendance.user.name }} </h5>
     <v-card-text>
-      <div class="font-weight-bold ml-8 mb-2">Status</div>
-
-      <v-timeline align-top dense>
-        <v-timeline-item color="green" small>
-          <div>
-            <div class="font-weight-normal">
-              <strong>Sign In</strong> 
-            </div>
-            <div>{{ attendance.signin }}</div>
-          </div>
-        </v-timeline-item>
-        <v-timeline-item color="red" small>
-          <div>
-            <div class="font-weight-normal">
-              <strong>Sign Out</strong> 
-            </div>
-            <div>{{ attendance.signout || '--/--/---- --:-- --' }}</div>
-          </div>
-        </v-timeline-item>
-      </v-timeline>
-    </v-card-text> -->
+      <h3><strong> Previous:</strong> {{ attendance.prev_location }} </h3>
+      <h3><strong> Current: </strong>{{ attendance.location }}</h3>
+    </v-card-text>
   </v-card>
 </template>
-
 <script>
-import { getPositionsDisplay } from "../constants/user";
 export default {
   name: "AttendanceProfile",
   props: ["attendance"],
-  methods: {
-    fnGetPositionsDisplay(value) {
-      return getPositionsDisplay(value)
-    }
-  }
 };
 </script>

@@ -1,8 +1,10 @@
 import api from '../plugins/axios'
 
 const LogService = {
-    fetchAll:() => {
-        return api.get('/activityLogs')
+    fetchAll:(filter) => {
+        return api.get('/activityLogs', {
+            params: filter
+        })
     }
 }
 

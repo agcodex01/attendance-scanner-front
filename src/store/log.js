@@ -9,9 +9,9 @@ export default {
         GET_LOGS: state => state.logs
     },
     actions: {
-        GET_LOGS ({ commit }) {
+        GET_LOGS ({ commit }, filter) {
             return new Promise((resolve, reject) => {
-                LogService.fetchAll().then(({ data}) => {
+                LogService.fetchAll(filter).then(({ data}) => {
                     commit('SET_LOGS', data)
                     resolve(data)
                 }).catch(error => reject(error.response.data))
