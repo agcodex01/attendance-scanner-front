@@ -9,12 +9,12 @@
     </div>
     <div class="px-3">
       <v-row>
-        <v-col v-for="stat in stats" :key="stat">
+        <v-col v-for="(stat, i) in stats" :key="i">
           <v-card elevation="3" max-width="300px">
-            <v-card-title>
+            <v-card-title class="border-top-left">
               <v-list-item class="grow">
                 <v-list-item-avatar>
-                  <v-icon class="mr-1">
+                  <v-icon class="mr-1" color="indigo">
                     {{ stat.icon }}
                   </v-icon>
                 </v-list-item-avatar>
@@ -25,52 +25,50 @@
               </v-list-item>
               <v-list-item class="grow">
                 <v-list-item-content>
-                  <v-list-item-title class="big-32"> {{ stat.total }} </v-list-item-title>
+                  <v-list-item-title class="big-32">
+                    {{ stat.total }}
+                  </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
             </v-card-title>
           </v-card>
         </v-col>
       </v-row>
-
+    </div>
+    <div class="px-2 mt-4">
+      <v-card flat>
+        <v-card-title> Recent Attendances </v-card-title>
+        <v-data-table
+          hide-default-footer
+          :headers="attendanceHeader"
+          :items="attendances"
+          :items-per-page="5"
+          class="elevation-1"
+          loading-text="Fetching attendances.."
+          :loading="loading"
+          no-data-text="Current no attendance recorded."
+        >
+        </v-data-table>
+      </v-card>
     </div>
   </v-card>
 </template>
 <script>
 import { mapActions, mapGetters } from "vuex";
-import UserConstant from "../constants/user";
 export default {
   name: "Admin",
   data: () => ({
-    searchEmployee: "",
-    searchAttendance: "",
-    searchLog: "",
-    tab: null,
-    constants: UserConstant,
-    userHeaders: [
+    loading: false,
+    links: [
       {
-        text: "Name",
-        value: "name",
+        text: "ECCEL",
+        disabled: false,
+        href: "breadcrumbs_dashboard",
       },
       {
-        text: "Email",
-        value: "email",
-      },
-      {
-        text: "Department",
-        value: "department",
-      },
-      {
-        text: "Position",
-        value: "position",
-      },
-      {
-        text: "User Type",
-        value: "type",
-      },
-      {
-        text: "Status",
-        value: "status",
+        text: "Dashboard",
+        disabled: true,
+        href: "breadcrumbs_link_1",
       },
     ],
     attendanceHeader: [
@@ -79,11 +77,11 @@ export default {
         value: "user.name",
       },
       {
-        text: "Signin",
+        text: "Scan In",
         value: "signin",
       },
       {
-        text: "Signout",
+        text: "Scan Out",
         value: "signout",
       },
       {
@@ -91,51 +89,24 @@ export default {
         value: "location",
       },
     ],
-    logHeader: [
-      {
-        text: "User",
-        value: "user.name",
-      },
-      {
-        text: "Scan At",
-        value: "created_at",
-      },
-      {
-        text: "Location",
-        value: "location",
-      },
-    ],
-    loading: false,
-    location: null,
-    links: [
-      {
-        text: 'ECCEL',
-        disabled: false,
-        href: 'breadcrumbs_dashboard',
-      },
-      {
-        text: 'Dashboard',
-        disabled: true,
-        href: 'breadcrumbs_link_1',
-      }
-    ]
   }),
   computed: {
     ...mapGetters({
       stats: "admin/GET_STATS",
-
+      attendances: "attendance/GET_ALL",
     }),
   },
   methods: {
     ...mapActions({
       fetchStats: "admin/GET_STATS",
+      fetchAttendances: "attendance/GET_ALL",
     }),
-
   },
   async mounted() {
     this.loading = true;
     this.location = this.currentDepartment;
     await this.fetchStats();
+    await this.fetchAttendances({});
     this.loading = false;
   },
 };
@@ -144,5 +115,9 @@ export default {
 <style>
 .big-32 {
   font-size: 32px !important;
+}
+
+.border-top-left {
+  border-left: 10px solid red;
 }
 </style>

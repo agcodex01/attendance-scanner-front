@@ -81,11 +81,11 @@ export default {
                 value: "user.name",
             },
             {
-                text: "Signin",
+                text: "Scan In",
                 value: "signin",
             },
             {
-                text: "Signout",
+                text: "Scan Out",
                 value: "signout",
             },
             {

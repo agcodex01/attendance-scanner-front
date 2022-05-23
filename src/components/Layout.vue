@@ -12,11 +12,11 @@
         <span class="mr-2">{{  date + ' ' +   time }}</span>
       </v-btn>
     </v-app-bar>
-    <v-navigation-drawer v-model="drawer" absolute app>
+    <v-navigation-drawer v-model="drawer" absolute app dark color="dark">
 
       <v-row class="fill-heigth">
         <v-col>
-          <v-sheet color="grey lighten-4" class="pa-4">
+          <v-sheet color="dark lighten-4" class="pa-4">
             <v-avatar class="mb-4" color="grey darken-1" size="64">
               <v-img alt="Vuetify Logo" src="@/assets/logo_evsu.png" />
             </v-avatar>
@@ -27,31 +27,31 @@
           <v-divider></v-divider>
           <v-list nav dense>
             <v-list-item-group v-model="group" active-class="deep-purple--text text--accent-4" v-if="showLinks">
-              <v-list-item to="/admin" exact>
+              <v-list-item to="/admin" exact active-class="active">
                 <v-list-item-icon>
                   <v-icon>mdi-dots-grid</v-icon>
                 </v-list-item-icon>
                 <v-list-item-title>Dashboard</v-list-item-title>
               </v-list-item>
-              <v-list-item to="/admin/users" exact>
+              <v-list-item to="/admin/users" exact active-class="active">
                 <v-list-item-icon>
                   <v-icon>mdi-account-multiple</v-icon>
                 </v-list-item-icon>
                 <v-list-item-title>Users</v-list-item-title>
               </v-list-item>
-              <v-list-item to="/admin/attendances" exact>
+              <v-list-item to="/admin/attendances" exact active-class="active">
                 <v-list-item-icon>
                   <v-icon>mdi-format-list-checks</v-icon>
                 </v-list-item-icon>
                 <v-list-item-title>Attendances</v-list-item-title>
               </v-list-item>
-              <v-list-item to="/admin/logs" exact>
+              <v-list-item to="/admin/logs" exact active-class="active">
                 <v-list-item-icon>
                   <v-icon>mdi-format-list-group</v-icon>
                 </v-list-item-icon>
                 <v-list-item-title>Activity Logs</v-list-item-title>
               </v-list-item>
-              <v-list-item to="/admin/setting" exact>
+              <v-list-item to="/admin/setting" exact active-class="active">
                 <v-list-item-icon>
                   <v-icon>mdi-cog</v-icon>
                 </v-list-item-icon>
@@ -126,5 +126,10 @@ export default {
   position: absolute !important;
   bottom: 0 !important;
   width: 100%;
+}
+
+.active {
+  background-color: red;
+  color: white !important;
 }
 </style>

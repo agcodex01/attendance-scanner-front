@@ -16,7 +16,7 @@
                 Users
                 <v-spacer></v-spacer>
                 <v-text-field v-model="searchEmployee" append-icon="mdi-magnify" label="Search" single-line
-                    hide-details>
+                    hide-details dense outlined style="max-width:500px">
                 </v-text-field>
             </v-card-title>
             <v-data-table :headers="userHeaders" :items="users" :items-per-page="5" :search="searchEmployee"

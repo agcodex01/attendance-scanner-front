@@ -1,5 +1,5 @@
 <template>
-  <v-card elevation="16" class="mx-auto text-center pb-4" max-width="300px">
+  <v-card elevation="16" class="mx-auto text-center pb-4 border-top-red " max-width="300px">
     <v-avatar color="grey" size="132" class="mt-8 mb-n16">
       <v-img :src="
         attendance.user.avatar || require('@/assets/default_user.png')
@@ -18,3 +18,9 @@ export default {
   props: ["attendance"],
 };
 </script>
+
+<style>
+.border-top-red {
+  border-top: 5px red solid !important;
+}
+</style>

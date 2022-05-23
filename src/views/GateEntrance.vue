@@ -43,9 +43,9 @@
     <v-dialog v-model="dialog" max-width="500px">
       <v-card class="py-8">
         <v-card-text>
-          <v-select v-model="selectedUser" :items="scanInUsers" item-text="name" item-value="atttendance_id" key="id"
+          <v-combobox v-model="selectedUser" :items="scanInUsers" item-text="name" item-value="attendance_id" key="id"
             label="User" outlined dense class="col-3" @change="setSelectedAttendance" clearable>
-          </v-select>
+          </v-combobox>
         </v-card-text>
         <v-card-text>
           <attendance-profile v-if="searchAttendance" :attendance="searchAttendance" />
@@ -108,9 +108,9 @@ export default {
         this.sign(userId)
           .then(({ data }) => {
             if (data.signout) {
-              this.text = `${data.user.name} school signout successfully.`;
+              this.text = `${data.user.name}  scan out successfully.`;
             } else {
-              this.text = `${data.user.name} school signin successfully.`;
+              this.text = `${data.user.name}  scan in successfully.`;
             }
             this.type = "green";
             this.showNotif = true;
@@ -141,13 +141,18 @@ export default {
         cA.forEach(a => {
           this.scanInUsers.push({
             name: a.user.name,
-            atttendance_id: a.id
+            attendance_id: a.id
           })
         })
       });
       this.dialog = true
     },
-    setSelectedAttendance(attendance_id) {
+    setSelectedAttendance(value) {
+      console.log(Object.assign({}, value));
+      let attendance_id = null
+      if (typeof(value) === 'object') {
+        attendance_id = value.attendance_id
+      }
       this.searchAttendance = null
       this.attendances.forEach(cA => {
         if (!Array.isArray(cA)) {
@@ -160,6 +165,7 @@ export default {
           }
         })
       });
+      console.log(attendance_id);
     }
   },
   async mounted() {

@@ -93,7 +93,7 @@ export default {
         }).then((attendance) => {
           this.showNotif = true
           this.type = 'green'
-          this.text = `${attendance.user.name} sign ${attendance.prev_location == this.currentDepartment ? 'out' : 'in'} successfully.`
+          this.text = `${attendance.user.name} scan  ${attendance.prev_location == this.currentDepartment ? 'out' : 'in'} successfully.`
         })
           .catch((error) => {
             if (error.status == 404) {
